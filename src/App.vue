@@ -6,15 +6,20 @@
       <FooterLayout />
     </div>
     <el-backtop></el-backtop>
+    <div>
+      <WalletConnect />
+    </div>
   </div>
 </template>
 <script>
 import { mapGetters } from "vuex";
 import HeaderLayout from "@/layout/HeaderLayout.vue";
 import FooterLayout from "@/layout/FooterLayout.vue";
+import WalletConnect from "../src/components/WalletConnect.vue";
+
 
 export default {
-  components: { HeaderLayout, FooterLayout },
+  components: { HeaderLayout, FooterLayout, WalletConnect },
   data() {
     return {};
   },
