@@ -1,0 +1,721 @@
+// 中文常规
+.fontfamily_zh {
+  font-family: PingFang !important;
+}
+// 英文常规
+.fontfamily_en {
+  font-family: Futura !important;
+}
+html,
+body {
+  font-size: 0;
+  width: 100%;
+  position: relative;
+  color: #ffffff;
+  background: #16161a;
+  font-family: Futura, PingFang;
+}
+a {
+  color: #ffffff;
+  text-decoration: none;
+}
+.pc {
+  display: flex !important;
+}
+.mobile {
+  display: none !important;
+}
+// 重置滚动条样式
+::-webkit-scrollbar {
+  width: 0.05rem;
+  height: 0.05rem;
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(104, 35, 145, 1), rgba(12, 129, 161, 1));
+  border-radius: 0.05rem;
+}
+::-webkit-scrollbar-track {
+  background: #000;
+}
+// 重置原生样式
+input {
+  background: none;
+  outline: none;
+  border: 0px;
+  caret-color: white;
+  font-family: Futura, PingFang;
+  &[type="number"] {
+    -moz-appearance: textfield;
+    &::-webkit-inner-spin-button,
+    &::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  }
+  &::placeholder {
+    color: #504e4e !important;
+    font-weight: 400;
+  }
+}
+button {
+  font-family: Futura, PingFang;
+}
+pre {
+  white-space: pre-line;
+  word-break: break-all;
+  word-wrap: break-word;
+  font-family: inherit;
+}
+
+// 公用样式
+.text_ellipsis {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+}
+
+.text_ellipsis_row_3 {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.box_title {
+  margin-bottom: 1rem;
+  img {
+    width: 2.95rem;
+    height: auto;
+  }
+  span {
+    font-size: 0.35rem;
+    font-weight: bold;
+    color: #53d0ff;
+    position: relative;
+    left: 0.1rem;
+    &::before {
+      content: "";
+      width: 0.5rem;
+      height: 0.5rem;
+      background: url(~@/assets/cdn/images/box_title2.webp) no-repeat;
+      background-size: 100% auto;
+      position: absolute;
+      top: 0.35rem;
+      left: 0;
+    }
+  }
+}
+.back_box {
+  width: 11.5rem;
+  position: absolute;
+  top: 0.5rem;
+  left: 0;
+  right: 0;
+  margin: auto;
+  div:hover {
+    color: #53ddfc;
+    span {
+      border-bottom: 1px solid #53ddfc;
+    }
+  }
+  div {
+    width: fit-content;
+    cursor: pointer;
+    span {
+      font-size: 0.2rem;
+      font-weight: bold;
+      border-bottom: 1px solid #ffffff;
+      margin-left: 0.05rem;
+    }
+    i {
+      font-size: 0.2rem;
+      font-weight: bold;
+    }
+  }
+}
+.gradient_border {
+  border-radius: 0.05rem;
+  padding: 1px;
+  background-image: linear-gradient(150deg, rgba(0, 211, 255, 0.5), rgba(0, 211, 255, 0), rgba(233, 150, 255, 0), rgba(233, 150, 255, 0.5));
+  > div {
+    width: 100%;
+    height: 100%;
+    border-radius: 0.05rem;
+    background: #080809;
+    transition: all 0.3s;
+    overflow: hidden;
+  }
+}
+// 重置组件样式
+.el-message {
+  min-width: 1rem;
+  border-color: transparent;
+  background: linear-gradient(90deg, #7b95a3 0%, #7f82a3 100%);
+  padding: 0.15rem 0.2rem;
+  top: 1.2rem !important;
+  .el-message__icon {
+    font-size: 0.25rem;
+    color: #ffffff;
+  }
+  .el-message__content {
+    font-size: 0.15rem;
+    color: #ffffff;
+  }
+}
+.el-message--success {
+  background: linear-gradient(90deg, #38697f 0%, #5d4c78 100%);
+}
+.el-message--warning {
+  background: linear-gradient(90deg, #8e8754 0%, #946144 100%);
+}
+.el-message--error {
+  background: linear-gradient(90deg, #905a54 0%, #6f272f 100%);
+}
+.el-button {
+  padding: 0;
+  color: #ffffff;
+  background-color: rgba(101, 101, 111, 0.58);
+  border-radius: 0.06rem;
+  border: none;
+  // background-color: #211f24;
+  // border-color: #413f3f;
+  &:focus,
+  &:hover {
+    color: #ffffff;
+    background-color: #211f24;
+    border-color: #413f3f;
+  }
+  &.is-disabled,
+  &.is-disabled:focus,
+  &.is-disabled:hover {
+    cursor: not-allowed;
+    color: #413f3f;
+    background-color: #211f24;
+    border-color: #413f3f;
+  }
+  &.is-loading:before {
+    background-color: transparent;
+  }
+  &.el-button--primary,
+  &.el-button--primary:focus,
+  &.el-button--primary:hover {
+    color: #ffffff;
+    border-color: transparent;
+    background: linear-gradient(90deg, #44819d 0%, #7a649e 100%);
+  }
+}
+.el-select {
+  .el-input {
+    width: 100%;
+    height: 100%;
+    font-size: 0.15rem;
+    font-weight: 400;
+    .el-input__inner {
+      border: none;
+      box-sizing: border-box;
+      padding: 1px;
+      width: 100%;
+      height: 100%;
+      color: #ffffff;
+      text-align: center;
+      border-radius: 0.2rem;
+      background-image: linear-gradient(rgba(214, 122, 65, 0.8), rgba(164, 133, 117, 0.8)),
+        linear-gradient(to bottom right, rgb(107, 48, 45), rgb(127, 76, 58));
+      background-clip: content-box, padding-box;
+    }
+  }
+}
+.el-input__suffix {
+  right: 1px;
+}
+.el-select-dropdown {
+  box-shadow: 0px 2px 12px 0px rgba(255, 255, 255, 0.27);
+  background-color: #dc8757;
+  border-radius: 0.09rem;
+  border: none;
+  .el-scrollbar__wrap {
+    .el-select-dropdown__list {
+      .el-select-dropdown__item {
+        color: #212121;
+        font-size: 0.15rem;
+        font-weight: 400;
+        text-align: center;
+        &:hover,
+        &.hover,
+        &.selected {
+          color: #ffffff;
+          background-color: #27272e;
+        }
+      }
+    }
+  }
+}
+.el-select-dropdown.el-popper[x-placement^="bottom"],
+.el-picker-panel.el-popper[x-placement^="bottom"] {
+  .popper__arrow {
+    border-bottom-color: transparent;
+    &::after {
+      border-bottom-color: #18181c;
+    }
+  }
+}
+
+.el-backtop {
+  right: 1rem !important;
+  bottom: 2.5rem !important;
+  background: rgba(129, 129, 151, 0.19);
+  &:hover {
+    background: linear-gradient(90deg, #44819d 0%, #7a649e 100%);
+  }
+  i {
+    color: #ffffff;
+  }
+}
+.el-step {
+  .el-step__head {
+    .el-step__icon {
+      border: none;
+      background: transparent;
+    }
+  }
+  .el-step__main {
+    .el-step__title,
+    .el-step__description {
+      font-size: 0.12rem;
+      font-weight: 400;
+      line-height: 0.2rem;
+    }
+    .el-step__title {
+      margin-bottom: 0.1rem;
+    }
+  }
+  .is-finish {
+    color: #00b3ff;
+    .el-step__line {
+      background: linear-gradient(135deg, rgba(212, 135, 241, 0.44), rgba(82, 224, 255, 0.44));
+    }
+  }
+  .is-process,
+  .is-wait {
+    color: #919191;
+    .el-step__line {
+      background: #919191;
+    }
+  }
+}
+.el-popup-parent--hidden {
+  padding-right: 0 !important;
+}
+.el-dialog__wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(0.1rem);
+  .el-dialog {
+    width: fit-content;
+    margin: 0;
+    background: #211f24;
+    border-radius: 0.2rem;
+    border: 1px solid #504e4e;
+    .el-dialog__header {
+      .el-dialog__title {
+        font-size: 0.2rem;
+        font-weight: bold;
+        color: #ffffff;
+        line-height: 0.2rem;
+      }
+      .el-dialog__headerbtn {
+        font-size: 0.35rem;
+        top: 0.1rem;
+        right: 0.1rem;
+        .el-dialog__close {
+          color: #ffffff;
+        }
+      }
+    }
+    .el-dialog__body {
+      padding: 0.2rem;
+    }
+    .el-dialog__footer .dialog-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+}
+.el-collapse {
+  border-top: none;
+  border-bottom: none;
+  .el-collapse-item__header {
+    height: 0.9rem;
+    line-height: 0.9rem;
+    background-color: transparent;
+    border-bottom: 1px solid transparent;
+    .el-collapse-item__arrow {
+      color: #ffffff;
+      font-size: 0.25rem;
+    }
+  }
+  .el-collapse-item__wrap {
+    background-color: transparent;
+    border-bottom: 1px solid transparent;
+    .el-collapse-item__content {
+      padding-bottom: 0;
+    }
+  }
+}
+.el-tag {
+  height: 0.3rem;
+  line-height: 0.3rem;
+  padding: 0 0.1rem;
+  font-size: 0.12rem;
+  color: #ffffff;
+  background: linear-gradient(90deg, #38697f 0%, #5d4c78 100%);
+  border-color: transparent;
+  border-radius: 0.07rem;
+  margin-right: 0.1rem;
+  .el-tag__close {
+    color: #ffffff;
+  }
+}
+
+.el-drawer__wrapper {
+  .el-drawer__container {
+    .el-drawer {
+      background-color: rgba(129, 129, 151, 0.19);
+      border-radius: 0.08rem 0 0 0.08rem;
+      backdrop-filter: blur(7px);
+    }
+  }
+}
+.dashboard_drawer {
+  .el-drawer__container {
+    .el-drawer {
+      width: 4.5rem !important;
+    }
+  }
+}
+
+.el-menu-dashboard {
+  border-right: 0;
+  background-color: transparent;
+  .el-submenu {
+    .el-submenu__title {
+      height: 0.5rem;
+      line-height: 0.5rem;
+      color: #ffffff;
+      font-size: 0.3rem;
+      font-weight: bold;
+      i {
+        color: #ffffff;
+        font-size: 0.3rem;
+        &:nth-child(1) {
+          margin-right: 0.1rem;
+        }
+      }
+    }
+    .el-menu-item {
+      min-width: 1rem;
+      height: 0.5rem;
+      line-height: 0.5rem;
+      color: #ffffff;
+      font-size: 0.15rem;
+      font-weight: bold;
+    }
+    .el-menu {
+      background-color: transparent;
+    }
+    .el-submenu__title:focus,
+    .el-submenu__title:hover,
+    .el-menu-item:focus,
+    .el-menu-item:hover,
+    .el-menu-item.is-active {
+      background-color: rgba(129, 129, 151, 0.19);
+      border-radius: 0.08rem;
+    }
+  }
+}
+.el-date-editor.el-input__inner {
+  height: 0.35rem;
+  background-color: rgba(24, 24, 28, 0.8);
+  border: 1px solid #606060;
+  .el-range-input {
+    color: #ffffff;
+    line-height: 0.35rem;
+  }
+  .el-range-separator {
+    color: #ffffff;
+    line-height: 0.25rem;
+  }
+  .el-range__icon,
+  .el-range__close-icon {
+    color: #ffffff;
+    line-height: 0.28rem;
+  }
+}
+.el-picker-panel {
+  color: #ffffff;
+  line-height: 0.3rem;
+  box-shadow: 0px 2px 12px 0px rgba(255, 255, 255, 0.27);
+  background: #18181c;
+  border-radius: 0.09rem;
+  border: none;
+  .el-date-range-picker__content.is-left {
+    border-right: 1px solid #696969;
+  }
+  .el-date-table {
+    th {
+      color: #ffffff;
+      border-bottom: 1px solid #696969;
+    }
+    td.in-range div {
+      background-color: #696969;
+    }
+    td.start-date span,
+    td.end-date span {
+      background-color: #696969;
+      background: linear-gradient(90deg, #44819d 0%, #7a649e 100%);
+    }
+  }
+}
+.el-loading-mask {
+  background-color: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(7px);
+  .el-loading-spinner {
+    .el-icon-loading {
+      font-size: 0.45rem;
+    }
+    .el-loading-text {
+      font-size: 0.2rem;
+    }
+  }
+}
+.el-popover {
+  min-width: 1.5rem;
+  background: #18181c;
+  border: none;
+  box-shadow: 0rem 0.02rem 0.12rem 0rem rgba(255, 255, 255, 0.27);
+  font-size: 0.15rem;
+  padding: 0;
+}
+.el-popper[x-placement^="top"] .popper__arrow,
+.el-popper[x-placement^="top"] .popper__arrow::after {
+  border-top-color: #18181c;
+}
+@media screen and (max-width: 750px) {
+  // 重置滚动条样式
+  ::-webkit-scrollbar {
+    width: 0.02rem;
+    height: 0.02rem;
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius: 0.02rem;
+  }
+  .pc {
+    display: none !important;
+  }
+  .mobile {
+    display: flex !important;
+  }
+  .box_title {
+    margin-bottom: 0.3rem;
+    img {
+      width: 1rem;
+      height: auto;
+    }
+    span {
+      font-size: 0.2rem;
+      left: 0.05rem;
+      &::before {
+        width: 0.2rem;
+        height: 0.2rem;
+        top: 0.2rem;
+        left: 0;
+      }
+    }
+  }
+  .back_box {
+    width: 90%;
+    top: 0.2rem;
+    div {
+      span {
+        font-size: 0.12rem;
+        font-weight: bold;
+        margin-left: 0.05rem;
+      }
+      i {
+        font-size: 0.15rem;
+        font-weight: bold;
+      }
+    }
+  }
+  .level_btn {
+    width: 55%;
+    bottom: 0.3rem;
+    font-size: 0.12rem;
+  }
+  // 重置组件样式
+  .el-message {
+    padding: 0.1rem 0.15rem;
+    top: 0.8rem !important;
+    .el-message__icon {
+      font-size: 0.18rem;
+    }
+    .el-message__content {
+      font-size: 0.12rem;
+    }
+  }
+  .el-backtop {
+    right: 0.2rem !important;
+    bottom: 1.5rem !important;
+  }
+  .el-step {
+    .el-step__main {
+      .el-step__title {
+        margin-bottom: 0.05rem;
+      }
+    }
+  }
+  .el-dialog__wrapper {
+    .el-dialog {
+      border-radius: 0.06rem;
+      .el-dialog__header {
+        .el-dialog__title {
+          font-size: 0.15rem;
+          font-weight: bold;
+          line-height: 0.15rem;
+        }
+        .el-dialog__headerbtn {
+          font-size: 0.2rem;
+          top: 0.1rem;
+          right: 0.1rem;
+        }
+      }
+      .el-dialog__body {
+        padding: 0.1rem;
+      }
+    }
+  }
+  .el-button {
+    border-radius: 0.06rem;
+  }
+  .el-select {
+    .el-input {
+      font-size: 0.12rem;
+      font-weight: 400;
+      .el-select__caret {
+        font-size: 0.05rem;
+      }
+    }
+  }
+  .el-input__suffix {
+    right: -4px;
+  }
+  .el-select-dropdown {
+    .el-scrollbar__wrap {
+      .el-select-dropdown__list {
+        .el-select-dropdown__item {
+          font-size: 0.12rem;
+          font-weight: 400;
+        }
+      }
+    }
+  }
+  .el-collapse {
+    border-top: none;
+    border-bottom: none;
+    .el-collapse-item__header {
+      height: 0.9rem;
+      line-height: 0.9rem;
+      background-color: transparent;
+      border-bottom: 1px solid transparent;
+      .el-collapse-item__arrow {
+        font-size: 0.25rem;
+      }
+    }
+    .el-collapse-item__wrap {
+      background-color: transparent;
+      border-bottom: 1px solid transparent;
+    }
+  }
+  .el-tag {
+    height: 0.24rem;
+    line-height: 0.24rem;
+    padding: 0 0.1rem;
+    font-size: 0.12rem;
+    border-radius: 0.07rem;
+    margin-right: 0.1rem;
+  }
+  .el-menu-dashboard {
+    .el-submenu {
+      .el-submenu__title {
+        height: 0.4rem;
+        line-height: 0.4rem;
+        font-size: 0.2rem;
+        i {
+          font-size: 0.2rem;
+          &:nth-child(1) {
+            margin-right: 0.05rem;
+          }
+        }
+      }
+      .el-menu-item {
+        min-width: 100%;
+        height: 0.4rem;
+        line-height: 0.4rem;
+        font-size: 0.12rem;
+      }
+    }
+  }
+  .dashboard_drawer {
+    .el-drawer__container {
+      .el-drawer {
+        width: 80vw !important;
+      }
+    }
+  }
+  .market_drawer {
+    .el-drawer__container {
+      .el-drawer {
+        width: 80vw !important;
+        padding: 0 5vw;
+        .el-collapse {
+          .el-collapse-item__header {
+            height: 0.5rem;
+            line-height: 0.5rem;
+            .el-collapse-item__arrow {
+              font-size: 0.18rem;
+            }
+          }
+        }
+      }
+    }
+  }
+  .el-date-editor.el-input__inner {
+    width: 50vw;
+    height: 0.3rem;
+    .el-range-input {
+      line-height: 0.3rem;
+    }
+    .el-range-separator {
+      line-height: 0.25rem;
+    }
+    .el-range__icon,
+    .el-range__close-icon {
+      line-height: 0.28rem;
+    }
+  }
+  .el-loading-mask {
+    .el-loading-spinner {
+      .el-icon-loading {
+        font-size: 0.3rem;
+      }
+      .el-loading-text {
+        font-size: 0.15rem;
+      }
+    }
+  }
+}
