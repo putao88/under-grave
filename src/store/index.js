@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
-// import web3ModalStore from "./modules/web3Modal";
+import web3ModalStore from "./modules/web3Modal";
 import underGraveStore from "./modules/underGrave";
 
 
@@ -11,7 +11,7 @@ export default new Vuex.Store({
   mutations: {},
   actions: {},
   modules: {
-    // web3Modal: web3ModalStore,
+    web3Modal: web3ModalStore,
     underGrave: underGraveStore,
   },
 });

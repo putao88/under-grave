@@ -31,8 +31,8 @@
       </ul>
       <div class="connect_lang">
         <div class="connect" @mouseover="showDisconnectFun" @mouseleave="hiddenDisconnectFun">
-          <span v-if="getWalletAccount">
-            {{ getWalletAccount | ellipsisWallet }}
+          <span v-if="getAccount">
+            {{ getAccount | ellipsisWallet }}
           </span>
           <span v-else @click="openWalletPopup">{{ $t("nav.text6") }}</span>
           <transition name="showDisconnect" appear>
@@ -71,7 +71,7 @@ export default {
       langArr: ["en", "zh"],
     };
   },
-  computed: { ...mapGetters(["getWalletAccount"]) },
+  computed: { ...mapGetters(["getAccount", "isConnected"]) },
   watch: {
     $route(to, from) {
       if (from.matched.length && to.matched[0].path !== from.matched[0].path) {
@@ -110,17 +110,17 @@ export default {
       location.reload();
     },
     openWalletPopup() {
-      this.$store.commit("setWalletListPopup", true);
+      this.$store.dispatch("connect");
     },
     showDisconnectFun() {
-      if (this.getWalletAccount) this.showDisconnect = true;
+      if (this.getAccount) this.showDisconnect = true;
     },
     hiddenDisconnectFun() {
-      if (this.getWalletAccount) this.showDisconnect = false;
+      if (this.getAccount) this.showDisconnect = false;
     },
     clickDisconnect() {
+      this.$store.dispatch("resetApp");
       this.showDisconnect = false;
-      this.$utils.walletDisconnect();
     },
   },
 };
