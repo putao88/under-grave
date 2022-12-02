@@ -24,25 +24,17 @@
             <img :src="(`${item.imgs}`)"/>
             {{ $t(item.text2) }}
           </pre>
-
-          <!--购买数量-->
-          <!-- <div class="left">
-          <div>{{ $t("recruit.text17") }}</div>
-          <div class="inputbox">
-                    <span class="span1"><i class="iconfont pcjianhao" @click="subtraction"></i></span>
-                    <input type="number" v-model="inputAmount" oninput="value=value.replace(/^(0+)|[^\d]+/g,'')"
-                      :disabled="buyloading" />
-                    <span class="span2"><i class="iconfont pcjiahao" @click="addition"></i></span>
-                  </div>
-                </div>-->
-
+          <!--购买数量组件-->
+          <el-input-number size="mini" v-model="item.buyAmount" @change="handleChange" :min="1" :max="100">
+          </el-input-number>
+          <!--购买组件，计数组件，计数器组件需单独设定，合约盲盒数量为整体数字-->
           <div class="btn">
             <div class="progress_bar">
               <div :style="{ width: item.progress }">
                 <span>{{ item.progress }}</span>
               </div>
             </div>
-            <el-button>{{ $t(item.text3) }}</el-button>
+            <el-button @click="click(item.link)">{{ $t(item.text3) }}</el-button>
           </div>
         </li>
       </ul>
@@ -52,7 +44,6 @@
       <div class="row_title">IDO
       </div>
     </div>
-
     <div class="rightbox">
       <div class="box1">
         <div class="title">
@@ -69,41 +60,15 @@
 
 <script>
 import { mapGetters } from "vuex";
+import NFTPresale from "../../abi/NFTPresale.json";
+import Web3 from 'web3'
 export default {
   name: "HOME",
+  computed: {
+    ...mapGetters(["isEnLang"])
+  },
   data() {
     return {
-      infoIndex: 0,
-      marketIndex: 0,
-      marketOption: {
-        loop: true,
-        initialSlide: 0,
-        effect: "slide",
-        // effect: "coverflow",
-        centeredSlides: true,
-        slidesPerView: 5,
-        // spaceBetween: "1%",
-        freeMode: true,
-        grabCursor: true,
-        pagination: {
-          el: ".swiper-pagination",
-          bulletClass: "my_pagination",
-          bulletActiveClass: "my_pagination_active",
-          clickable: true,
-        },
-        coverflow: {
-          rotate: 50,
-          stretch: 0,
-          depth: 100,
-          modifier: 1,
-          slideShadows: true,
-        },
-        on: {
-          slideChange: () => {
-            this.marketIndex = this.$refs.marketSwiper.swiper.activeIndex;
-          },
-        },
-      },
       daoList: [
         {
           text1: "home.daos[0].text1",
@@ -111,8 +76,10 @@ export default {
           text3: "home.daos[0].text3",
           text4: "home.daos[0].text4",
           imgs: require("@/assets/cdn/images/Normal_50006.png"),
-          link: "",
+          link: "buyFirst",
           progress: "0/2000",
+          buyAmount: '1',
+
         },
         {
           text1: "home.daos[1].text1",
@@ -120,8 +87,9 @@ export default {
           text3: "home.daos[1].text3",
           text4: "home.daos[1].text4",
           imgs: require("@/assets/cdn/images/Normal_50026.png"),
-          link: "",
+          link: "buySecond",
           progress: "0/800",
+          buyAmount: '1',
         },
         {
           text1: "home.daos[2].text1",
@@ -129,8 +97,9 @@ export default {
           text3: "home.daos[2].text3",
           text4: "home.daos[2].text4",
           imgs: require("@/assets/cdn/images/Normal_50025.png"),
-          link: "",
+          link: "buyThird",
           progress: "0/200",
+          buyAmount: '1',
         },
         {
           text1: "home.daos[3].text1",
@@ -140,18 +109,79 @@ export default {
           imgs: require("@/assets/cdn/images/Normal_50021.png"),
           link: "",
           progress: "0/500",
+          buyAmount: '1',
         },
       ],
     };
   },
-  computed: { ...mapGetters(["isEnLang"]) },
   methods: {
-    toOtherPage(href) {
-      if (href) window.location.href = href;
+    handleChange(value) {
+      console.log(value);
     },
-    switchInfo(index) {
-      this.infoIndex = index;
+    click: function (e) {
+      this[e]();
     },
+    buyFirst: async function () {
+      if (window.ethereum) {
+        var web3 = (web3 = new Web3(window.web3.currentProvider));
+        let fromAddress = await web3.eth.getAccounts();
+        console.log(fromAddress)
+        let NFTPresaleAddress = "0x2c884FCDd3dEea45D3175b85965042f3e21a15C1"; //INO地址
+        let PresaleContract = new web3.eth.Contract(
+          NFTPresale,
+          NFTPresaleAddress
+        );
+        console.log(PresaleContract)
+        let countAmount = this.daoList[0].buyAmount;
+        PresaleContract.methods
+          .buyFirst(countAmount)
+          .send({
+            from: fromAddress[0],
+            value: countAmount * 1 * (10 ** 17)
+          });
+      }
+    },
+    buySecond: async function () {
+      if (window.ethereum) {
+        var web3 = (web3 = new Web3(window.web3.currentProvider));
+        let fromAddress = await web3.eth.getAccounts();
+        console.log(fromAddress)
+        let NFTPresaleAddress = "0x2c884FCDd3dEea45D3175b85965042f3e21a15C1"; //INO地址
+        let PresaleContract = new web3.eth.Contract(
+          NFTPresale,
+          NFTPresaleAddress
+        );
+        console.log(PresaleContract)
+        let countAmount = this.daoList[1].buyAmount;
+        PresaleContract.methods
+          .buySecond(countAmount)
+          .send({
+            from: fromAddress[0],
+            value: countAmount * 2 * (10 ** 17)
+          });
+      }
+    },
+    buyThird: async function () {
+      if (window.ethereum) {
+        var web3 = (web3 = new Web3(window.web3.currentProvider));
+        let fromAddress = await web3.eth.getAccounts();
+        console.log(fromAddress)
+        let NFTPresaleAddress = "0x2c884FCDd3dEea45D3175b85965042f3e21a15C1"; //INO地址
+        let PresaleContract = new web3.eth.Contract(
+          NFTPresale,
+          NFTPresaleAddress
+        );
+        console.log(PresaleContract)
+        let countAmount = this.daoList[2].buyAmount;
+        PresaleContract.methods
+          .buyThird(countAmount)
+          .send({
+            from: fromAddress[0],
+            value: countAmount * 1 * (10 ** 18)
+          });
+      }
+    },
+
   },
 };
 </script>
@@ -201,7 +231,7 @@ export default {
       box-shadow: 0rem 0.14rem 0.27rem -0.08rem rgba(0, 0, 0, 0.49);
       border-radius: 0.2rem;
       backdrop-filter: blur(31px);
-      padding: 0.2rem 0.4rem;
+      padding: 0.2rem 0.38rem;
       margin-bottom: 0.5rem;
       position: relative;
       overflow: hidden;
@@ -421,61 +451,8 @@ export default {
     font-size: 0.25rem;
     font-weight: bold;
     color: #ce6519;
-    margin-bottom: 0.3rem;
+    margin-bottom: -0.5rem;
     background-size: 60%;
-  }
-
-  .row3 {
-    width: 80vw;
-    margin: 0.5rem auto;
-
-    .tabbox {
-      flex-wrap: wrap;
-
-      .tab {
-        width: 100%;
-        margin-bottom: 0.1rem;
-        display: flex;
-        align-items: center;
-        justify-content: space-around;
-
-        img {
-          width: 0.41rem;
-          height: auto;
-          opacity: 0.3;
-
-          &.active {
-            opacity: 1;
-          }
-        }
-      }
-
-      .card {
-        width: 100%;
-        height: 3.8rem;
-        padding: 0.4rem 0.2rem;
-        background-repeat: no-repeat;
-        background-size: 100% 100%;
-
-        img {
-          width: 0.45rem;
-          height: auto;
-        }
-
-        div {
-          font-size: 0.12rem;
-          font-weight: bold;
-          line-height: 0.18rem;
-          margin-bottom: 0.1rem;
-        }
-
-        pre {
-          font-size: 0.12rem;
-          font-weight: 500;
-          line-height: 0.15rem;
-        }
-      }
-    }
   }
 
   .row4 {
@@ -514,6 +491,8 @@ export default {
         }
 
         .btn {
+          padding: 0.1rem;
+
           .el-button {
             width: 0.8rem;
             height: 0.3rem;
@@ -523,73 +502,6 @@ export default {
             width: 1.2rem;
             height: 0.05rem;
           }
-        }
-      }
-    }
-  }
-
-  .row5 {
-    width: 90vw;
-    margin: 0.5rem auto;
-
-    .titlebox {
-      width: 100%;
-      padding: 0.1rem;
-      border-radius: 0.1rem;
-      margin-bottom: 0.2rem;
-
-      img {
-        width: 0.6rem;
-        height: auto;
-      }
-
-      pre {
-        font-size: 0.12rem;
-        font-weight: 500;
-        line-height: 0.15rem;
-      }
-    }
-
-    .contentbox {
-      >img {
-        height: 1.85rem;
-      }
-
-      >div {
-        img {
-          height: 0.9rem;
-
-          &:nth-child(1) {
-            margin-bottom: 0.05rem;
-          }
-        }
-      }
-    }
-  }
-
-  .row6 {
-    width: 100vw;
-    margin: 0.5rem auto;
-
-    .market_swiper {
-      padding-bottom: 0.3rem;
-
-      .swiper-slide {
-        .card {
-          span {
-            font-size: 0.12rem;
-            top: 3%;
-            left: 8%;
-          }
-        }
-      }
-
-      ::v-deep .swiper-pagination {
-        .my_pagination {
-          width: 0.08rem;
-          height: 0.08rem;
-          border-radius: 0.08rem;
-          margin: 0 0.05rem;
         }
       }
     }
@@ -636,98 +548,8 @@ export default {
       }
     }
   }
-
-  .row8 {
-    width: 90vw;
-    margin: 0 auto;
-
-    ul {
-      li {
-        width: 25%;
-        padding: 0.1rem;
-      }
-    }
-  }
 }
 
-
-
-
-
-
-
-
-
-
-
-.tip_box {
-  width: 11.5rem;
-  height: 0.75rem;
-  line-height: 0.75rem;
-  background: rgba(129, 129, 151, 0.19);
-  border-radius: 0.08rem;
-  backdrop-filter: blur(0.07rem);
-  margin: 0.4rem auto;
-  font-size: 0.2rem;
-  font-weight: 600;
-  color: #969494;
-  text-align: center;
-}
-
-.box {
-  width: 11.5rem;
-  margin: 0 auto;
-  height: auto;
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-}
-
-.leftbox {
-  width: 4.2rem;
-  height: auto;
-
-  .blindbox {
-    width: 100%;
-    height: 4.2rem;
-    background: rgba(129, 129, 151, 0.19);
-    border-radius: 8px;
-    border: 1px solid #436e77;
-    backdrop-filter: blur(0.07rem);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 0.4rem;
-
-  }
-
-  .info {
-    width: 100%;
-    height: .4rem;
-    background: rgba(129, 129, 151, 0.19);
-    border-radius: 8px;
-    border: 1px solid #436e77;
-    backdrop-filter: blur(0.07rem);
-    padding: 0.2rem;
-
-
-    div {
-      width: 100%;
-      height: 33%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 0.2rem;
-      font-weight: 600;
-      border-bottom: 1px solid;
-      border-image: linear-gradient(135deg, rgba(212, 135, 241, 0.44), rgba(82, 224, 255, 0.44)) 1 1;
-
-      &:last-child {
-        border: none;
-      }
-    }
-  }
-}
 
 .rightbox {
   width: 100%;
@@ -841,93 +663,7 @@ export default {
         }
       }
 
-      .buy_box {
-        width: 100%;
-        height: 1.5rem;
-        padding: 0 0.5rem;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
 
-        .left {
-          div {
-            font-size: 0.12rem;
-
-            &:nth-child(1) {
-              font-weight: bold;
-              position: relative;
-
-              &::before {
-                content: "";
-                width: 0.02rem;
-                height: 100%;
-                background: linear-gradient(135deg, rgba(212, 135, 241, 0.44), rgba(82, 224, 255, 0.44));
-                position: absolute;
-                top: 0;
-                left: -0.1rem;
-              }
-            }
-          }
-
-          .inputbox {
-            width: 2rem;
-            height: 0.4rem;
-            margin: 0.1rem 0;
-            background: rgba(24, 24, 28, 0.8);
-            border-radius: 0.08rem;
-            border: 1px solid #606060;
-            display: flex;
-            align-items: center;
-
-            input {
-              width: 100%;
-              height: 100%;
-              font-size: 0.2rem;
-              font-weight: 400;
-              color: #ffffff;
-              text-align: center;
-            }
-
-            .span1,
-            .span2 {
-              width: 0.5rem;
-              height: 80%;
-              border-image: linear-gradient(180deg, rgba(85, 85, 87, 0), rgba(85, 85, 87, 1), rgba(85, 85, 87, 1), rgba(85, 85, 87, 0)) 1 1;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              cursor: pointer;
-
-              &:hover i {
-                color: #29a7e1;
-              }
-
-              i {
-                font-size: 0.25rem;
-                font-weight: 400;
-                color: #555557;
-              }
-            }
-
-            .span1 {
-              border-right: 1px solid;
-            }
-
-            .span2 {
-              border-left: 1px solid;
-            }
-          }
-        }
-
-        .right {
-          .el-button {
-            width: 1.2rem;
-            height: 0.4rem;
-            line-height: 0.4rem;
-            font-size: 0.15rem;
-          }
-        }
-      }
 
       .progress_bar_box {
         width: 100%;
