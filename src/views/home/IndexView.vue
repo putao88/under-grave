@@ -29,10 +29,8 @@
           </el-input-number>
           <!--购买组件，计数组件，计数器组件需单独设定，合约盲盒数量为整体数字-->
           <div class="btn">
-            <div class="progress_bar">
-              <div :style="{ width: item.progress }">
-                <span>{{ item.progress }}</span>
-              </div>
+            <div class="progress-wrap">
+              <process :total="item.progressTotal" :done="item.progressDone" />
             </div>
             <el-button @click="click(item.link)">{{ $t(item.text3) }}</el-button>
           </div>
@@ -60,10 +58,12 @@
 
 <script>
 import { mapGetters } from "vuex";
+import Process from "@/components/Process.vue";
 import NFTPresale from "../../abi/NFTPresale.json";
 import Web3 from 'web3'
 export default {
   name: "HOME",
+  components: { Process },
   computed: {
     ...mapGetters(["isEnLang"])
   },
@@ -77,7 +77,8 @@ export default {
           text4: "home.daos[0].text4",
           imgs: require("@/assets/cdn/images/Normal_50006.png"),
           link: "buyFirst",
-          progress: "0/2000",
+          progressDone: 200,
+          progressTotal: 2000,
           buyAmount: '1',
 
         },
@@ -88,7 +89,8 @@ export default {
           text4: "home.daos[1].text4",
           imgs: require("@/assets/cdn/images/Normal_50026.png"),
           link: "buySecond",
-          progress: "0/800",
+          progressDone: 0,
+          progressTotal: 800,
           buyAmount: '1',
         },
         {
@@ -98,7 +100,8 @@ export default {
           text4: "home.daos[2].text4",
           imgs: require("@/assets/cdn/images/Normal_50025.png"),
           link: "buyThird",
-          progress: "0/200",
+          progressDone: 0,
+          progressTotal: 200,
           buyAmount: '1',
         },
         {
@@ -108,7 +111,8 @@ export default {
           text4: "home.daos[3].text4",
           imgs: require("@/assets/cdn/images/Normal_50021.png"),
           link: "",
-          progress: "0/500",
+          progressDone: 0,
+          progressTotal: 500,
           buyAmount: '1',
         },
       ],
@@ -281,30 +285,14 @@ export default {
         display: flex;
         align-items: center;
         justify-content: space-between;
-
+        margin: 20px 0;
+        .progress-wrap {
+          margin-right: 40px;
+          flex: 1;
+        }
         .el-button {
           width: 1.5rem;
           height: 0.3rem;
-        }
-
-        .progress_bar {
-          width: 2.5rem;
-          height: 0.05rem;
-
-          div {
-            position: relative;
-            width: 80%;
-            height: 100%;
-            background: linear-gradient(134deg, rgba(0, 211, 255, 1), rgba(176, 108, 198, 1));
-            border-radius: 0.05rem;
-
-            span {
-              position: absolute;
-              right: 0;
-              bottom: 0.05rem;
-              font-size: 0.12rem;
-            }
-          }
         }
       }
     }
@@ -497,11 +485,6 @@ export default {
             width: 0.8rem;
             height: 0.3rem;
           }
-
-          .progress_bar {
-            width: 1.2rem;
-            height: 0.05rem;
-          }
         }
       }
     }
@@ -680,24 +663,6 @@ export default {
 
           >div:nth-child(1) {
             font-weight: bold;
-          }
-
-          .progress_bar {
-            width: 100%;
-            height: auto;
-            background: #17181b;
-            border-radius: 0.1rem;
-            margin: 0.1rem 0;
-
-            div {
-              width: 0;
-              transition: all 1s;
-              text-align: right;
-              font-size: 0.1rem;
-              font-weight: 600;
-              background-image: linear-gradient(to right, rgba(0, 211, 255, 0.5), rgba(176, 108, 198, 1));
-              border-radius: 0.1rem;
-            }
           }
         }
       }
@@ -925,10 +890,6 @@ export default {
               font-weight: bold;
             }
 
-            .progress_bar {
-              border-radius: 0.1rem;
-              margin: 0.1rem 0;
-            }
           }
         }
       }

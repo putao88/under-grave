@@ -42,8 +42,7 @@ export default {
 
 <style lang="scss" scoped>
 .progress_bar {
-  margin: 100px auto;
-  // width: 2.5rem;
+  width: 100%;
   height: 0.05rem;
   .process-background {
     position: relative;
