@@ -17,7 +17,8 @@
         <li :class="{ active: navActive > 3 }">
           <el-popover placement="bottom" trigger="manual" v-model="isShowMore">
             <div class="menu_mobile_more">
-              <div v-for="(item, index) in navArr.slice(4, 6)" :key="index" :class="{ active: navActive == index + 4 }" @click="toRoute(item)">
+              <div v-for="(item, index) in navArr.slice(4, 6)" :key="index" :class="{ active: navActive == index + 4 }"
+                @click="toRoute(item)">
                 <i class="iconfont" :class="item.icon"></i>
                 <div>{{ $t(item.label) }}</div>
               </div>
@@ -31,8 +32,8 @@
       </ul>
       <div class="connect_lang">
         <div class="connect" @mouseover="showDisconnectFun" @mouseleave="hiddenDisconnectFun">
-          <span v-if="getWalletAccount">
-            {{ getWalletAccount | ellipsisWallet }}
+          <span v-if="getAccount">
+            {{ getAccount | ellipsisWallet }}
           </span>
           <span v-else @click="openWalletPopup">{{ $t("nav.text6") }}</span>
           <transition name="showDisconnect" appear>
@@ -71,7 +72,7 @@ export default {
       langArr: ["en", "zh"],
     };
   },
-  computed: { ...mapGetters(["getWalletAccount"]) },
+  computed: { ...mapGetters(["getAccount", "isConnected"]) },
   watch: {
     $route(to, from) {
       if (from.matched.length && to.matched[0].path !== from.matched[0].path) {
@@ -110,17 +111,17 @@ export default {
       location.reload();
     },
     openWalletPopup() {
-      this.$store.commit("setWalletListPopup", true);
+      this.$store.dispatch("connect");
     },
     showDisconnectFun() {
-      if (this.getWalletAccount) this.showDisconnect = true;
+      if (this.getAccount) this.showDisconnect = true;
     },
     hiddenDisconnectFun() {
-      if (this.getWalletAccount) this.showDisconnect = false;
+      if (this.getAccount) this.showDisconnect = false;
     },
     clickDisconnect() {
+      this.$store.dispatch("resetApp");
       this.showDisconnect = false;
-      this.$utils.walletDisconnect();
     },
   },
 };
@@ -135,6 +136,7 @@ export default {
   top: 0;
   z-index: 999;
   transition: all 0.5s;
+
   .nav_inset {
     width: 11.5rem;
     height: 100%;
@@ -142,14 +144,17 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
+
     .logo {
       width: auto;
       height: 80%;
       cursor: pointer;
     }
+
     .connect_lang {
       display: flex;
       align-items: center;
+
       .connect {
         cursor: pointer;
         height: 0.35rem;
@@ -163,6 +168,7 @@ export default {
         background: linear-gradient(90deg, #ac4711 0%, #d47221 100%);
         border-radius: 0.05rem;
         position: relative;
+
         .disconnect {
           height: 0.45rem;
           width: 100%;
@@ -178,12 +184,16 @@ export default {
           transform-origin: top center;
         }
       }
+
       .lang_box {
+        cursor: pointer;
         margin-left: 0.1rem;
+
         .el-select {
+          cursor: pointer;
           width: 0.7rem;
           height: 0.35rem;
-          
+
         }
       }
     }
@@ -193,15 +203,18 @@ export default {
   .showDisconnect-leave-to {
     transform: scaleY(0);
   }
+
   .showDisconnect-enter-to,
   .showDisconnect-leave {
     transform: scaleY(1);
   }
 }
+
 .menu_pc {
   height: 100%;
   display: flex;
   align-items: center;
+
   li {
     height: 80%;
     font-size: 0.2rem;
@@ -210,13 +223,15 @@ export default {
     display: flex;
     align-items: center;
     padding: 0 1.5vw;
+
     &.active {
       color: #ac4711;
     }
   }
 }
+
 .menu_mobile {
-  width: 100vw;
+  width: 100%;
   height: 0.6rem;
   background: #0a0a0d;
   display: flex;
@@ -227,38 +242,49 @@ export default {
   bottom: 0;
   left: 0;
   padding: 5vw;
+
   li {
     font-size: 0.12rem;
+
     i {
       font-size: 0.25rem;
     }
+
     &.active {
       color: #ac4711;
     }
   }
 }
+
 .menu_mobile_more {
-  > div {
+  >div {
+    color: #f5f0ee;
     display: flex;
     align-items: center;
+    font-size: 0.05rem;
     height: 0.4rem;
     line-height: 0.4rem;
-    padding: 0 0.1rem;
+    padding-right: 0.1rem;
+
     i {
-      margin-right: 0.1rem;
+      margin: 0 0.05rem 0 0.1rem;
     }
+
     &.active {
       background: #27272e;
       color: #ac4711;
     }
   }
 }
+
 @media screen and (max-width: 750px) {
   .nav {
     width: 100vw;
     height: 0.5rem;
+
     .nav_inset {
       width: 90%;
+
       .connect_lang {
         .connect {
           height: 0.25rem;
@@ -266,13 +292,18 @@ export default {
           font-weight: 400;
           padding: 0.05rem 0.1rem;
           border-radius: 0.03rem;
+
           .disconnect {
             border-radius: 0.03rem;
           }
         }
+
         .lang_box {
+          cursor: pointer;
           margin-left: 0.05rem;
+
           .el-select {
+            cursor: pointer;
             width: 0.5rem;
             height: 0.25rem;
           }

@@ -6,9 +6,7 @@
       <FooterLayout />
     </div>
     <el-backtop></el-backtop>
-    <div>
-      <WalletConnect />
-    </div>
+    <WalletConnect />
   </div>
 </template>
 <script>

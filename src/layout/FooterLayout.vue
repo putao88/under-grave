@@ -9,7 +9,7 @@
           </a>
         </div>
       </div>
-      <p>{{ $t("footer.text1") }}</p>
+      <p>{{ $t("footer.text1")}}</p>
     </div>
   </div>
 </template>
@@ -77,7 +77,7 @@ height: 2.3rem;
     }
 
     p {
-      font-size: 0.15rem;
+      font-size: 0.13rem;
       font-weight: bold;
       line-height: 0.5rem;
       letter-spacing: 0.06rem;
