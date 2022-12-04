@@ -29,8 +29,8 @@
           </el-input-number>
           <!--购买组件，计数组件，计数器组件需单独设定，合约盲盒数量为整体数字-->
           <div class="btn">
-            <div class="progress-wrap">
-              <process :total="item.progressTotal" :done="item.progressDone" />
+            <div class="progress_bar">
+              <el-progress :percentage="Number(item.percentage)" :color="customColor"></el-progress>
             </div>
             <el-button @click="click(item.link)">{{ $t(item.text3) }}</el-button>
           </div>
@@ -42,6 +42,8 @@
       <div class="row_title">IDO
       </div>
     </div>
+
+
     <div class="rightbox">
       <div class="box1">
         <div class="title">
@@ -58,17 +60,18 @@
 
 <script>
 import { mapGetters } from "vuex";
-import Process from "@/components/Process.vue";
+//import Process from "@/components/Process.vue";
 import NFTPresale from "../../abi/NFTPresale.json";
 import Web3 from 'web3'
 export default {
   name: "HOME",
-  components: { Process },
+  // components: { Process },
   computed: {
     ...mapGetters(["isEnLang"])
   },
   data() {
     return {
+      customColor: '#f56c6c',
       daoList: [
         {
           text1: "home.daos[0].text1",
@@ -77,10 +80,10 @@ export default {
           text4: "home.daos[0].text4",
           imgs: require("@/assets/cdn/images/Normal_50006.png"),
           link: "buyFirst",
-          progressDone: 200,
-          progressTotal: 2000,
+          progressDone: "",
+          progressTotal: "",
+          percentage: 0,
           buyAmount: '1',
-
         },
         {
           text1: "home.daos[1].text1",
@@ -89,8 +92,9 @@ export default {
           text4: "home.daos[1].text4",
           imgs: require("@/assets/cdn/images/Normal_50026.png"),
           link: "buySecond",
-          progressDone: 0,
-          progressTotal: 800,
+          progressDone: "",
+          progressTotal: "",
+          percentage: 0,
           buyAmount: '1',
         },
         {
@@ -100,8 +104,9 @@ export default {
           text4: "home.daos[2].text4",
           imgs: require("@/assets/cdn/images/Normal_50025.png"),
           link: "buyThird",
-          progressDone: 0,
-          progressTotal: 200,
+          progressDone: "",
+          progressTotal: "",
+          percentage: 0,
           buyAmount: '1',
         },
         {
@@ -111,14 +116,62 @@ export default {
           text4: "home.daos[3].text4",
           imgs: require("@/assets/cdn/images/Normal_50021.png"),
           link: "",
-          progressDone: 0,
-          progressTotal: 500,
+          progressDone: "",
+          progressTotal: "",
+          percentage: 100,
           buyAmount: '1',
         },
       ],
     };
   },
+  mounted() {
+    // this.daoList[0].percentage = setInterval(() => {
+    //   setTimeout(this.boxsellData, 0)
+    // }, 100 * 60)
+    this.boxsellData();
+  },
   methods: {
+    async boxsellData() {
+      if (window.ethereum) {
+        var web3 = (web3 = new Web3(window.web3.currentProvider));
+        let fromAddress = await web3.eth.getAccounts();
+        console.log(fromAddress)
+        let NFTPresaleAddress = "0x2c884FCDd3dEea45D3175b85965042f3e21a15C1"; //INO地址
+        let PresaleContract = new web3.eth.Contract(
+          NFTPresale,
+          NFTPresaleAddress
+        );
+        this.daoList[0].progressDone = await PresaleContract.methods
+          .primaryId()
+          .call();
+        this.daoList[0].progressTotal = await PresaleContract.methods
+          .primary()
+          .call();
+        this.daoList[0].percentage = (this.daoList[0].progressDone / this.daoList[0].progressTotal * 100).toFixed(2)
+        console.log(this.daoList[0].progressDone)
+
+        this.daoList[1].progressDone = await (PresaleContract.methods
+          .seniorId()
+          .call()) - 2000;
+        this.daoList[1].progressTotal = await (PresaleContract.methods
+          .senior()
+          .call()) - 2000;
+        this.daoList[1].percentage = (this.daoList[1].progressDone / this.daoList[1].progressTotal * 100).toFixed(2)
+        console.log(this.daoList[1].progressDone);
+
+        this.daoList[2].progressDone = await (PresaleContract.methods
+          .ultimateId()
+          .call()) - 2800;
+        this.daoList[2].progressTotal = await (PresaleContract.methods
+          .ultimate()
+          .call()) - 2800;
+        this.daoList[2].percentage = (this.daoList[2].progressDone / this.daoList[2].progressTotal * 100).toFixed(2)
+        console.log(this.daoList[2].progressDone);
+      } else {
+        alert("Please connect the wallet");
+      }
+    },
+
     handleChange(value) {
       console.log(value);
     },
@@ -285,14 +338,22 @@ export default {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin: 20px 0;
-        .progress-wrap {
-          margin-right: 40px;
-          flex: 1;
-        }
+
         .el-button {
           width: 1.5rem;
           height: 0.3rem;
+        }
+
+        .progress_bar {
+          width: 2.5rem;
+          height: 0.05rem;
+          // div {
+          //   position: relative;
+          //   width: 80%;
+          //   height: 100%;
+          //   background: linear-gradient(134deg, rgba(0, 211, 255, 1), rgba(176, 108, 198, 1));
+          //   border-radius: 0.05rem;
+          // }
         }
       }
     }
@@ -485,6 +546,11 @@ export default {
             width: 0.8rem;
             height: 0.3rem;
           }
+
+          .progress_bar {
+            width: 1.2rem;
+            height: 0.05rem;
+          }
         }
       }
     }
@@ -664,6 +730,24 @@ export default {
           >div:nth-child(1) {
             font-weight: bold;
           }
+
+          // .progress_bar {
+          //   width: 100%;
+          //   height: auto;
+          //   background: #17181b;
+          //   border-radius: 0.1rem;
+          //   margin: 0.1rem 0;
+
+          //   div {
+          //     width: 0;
+          //     transition: all 1s;
+          //     text-align: right;
+          //     font-size: 0.1rem;
+          //     font-weight: 600;
+          //     background-image: linear-gradient(to right, rgba(0, 211, 255, 0.5), rgba(176, 108, 198, 1));
+          //     border-radius: 0.1rem;
+          //   }
+          // }
         }
       }
     }
@@ -890,6 +974,10 @@ export default {
               font-weight: bold;
             }
 
+            .progress_bar {
+              border-radius: 0.1rem;
+              margin: 0.1rem 0;
+            }
           }
         }
       }
