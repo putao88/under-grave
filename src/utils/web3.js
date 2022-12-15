@@ -2,7 +2,7 @@ import { ethers } from "ethers";
 import web3 from "web3";
 
 const POLLING_INTERVAL = 12000;
-const RPC_URL = "https://data-seed-prebsc-1-s1.binance.org:8545/";
+const RPC_URL = "https://bsc-dataseed4.ninicoin.io";
 export const getLibrary = () => {
   const httpProvider = new web3.providers.HttpProvider(RPC_URL);
   const web3NoAccount = new ethers.providers.Web3Provider(httpProvider);

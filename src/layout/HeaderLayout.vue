@@ -42,6 +42,7 @@
               <i class="iconfont pcblock"></i>
             </div>
           </transition>
+
         </div>
         <div class="lang_box">
           <el-select v-model="$i18n.locale" @change="changeLang">
@@ -61,7 +62,7 @@ export default {
       navActive: 0,
       navArr: [
         { label: "nav.text1", icon: "pchome", link: "/home", isOpen: true },
-        { label: "nav.text2", icon: "pcdianqunshichang", link: "/recruit", isOpen: true },
+        { label: "nav.text2", icon: "pcdianqunshichang", link: "/recruit", isOpen: false },
         { label: "nav.text3", icon: "pczijin", link: "/expedition", isOpen: true },
         { label: "nav.text4", icon: "pcdengji", link: "/tavern", isOpen: true },
         { label: "nav.text5", icon: "pcyingyongshichang", link: "/dashboard", isOpen: true },
@@ -93,7 +94,46 @@ export default {
       }
     },
   },
+  mounted() {
+    this.changeNetwork()
+  },
   methods: {
+
+    async changeNetwork() {
+      if (this.validated()) {
+        this.switchNetwork();
+        await window.ethereum.request({
+          method: "eth_requestAccounts",
+        });
+      }
+    },
+    async switchNetwork() {
+      await window.ethereum.request({
+        method: "wallet_addEthereumChain",
+        params: [
+          {
+            chainId: '0x61',
+            chainName: 'Binance Smart Chain Testnet',
+            nativeCurrency: {
+              name: 'Binance Coin',
+              symbol: 'BNB',
+              decimals: 18,
+            },
+            rpcUrls: [
+              'https://data-seed-prebsc-1-s3.binance.org:8545',
+            ],
+            blockExplorerUrls: ['https://testnet.bscscan.com'],
+          },
+        ],
+      });
+    },
+    validated() {
+      if (typeof window.ethereum !== "undefined") {
+        return true;
+      }
+      return false;
+    },
+    
     toHome() {
       this.$router.push("/home");
     },

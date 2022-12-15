@@ -1,5 +1,6 @@
 <template>
-  <div id="container" :class="isEnLang ? 'fontfamily_en' : 'fontfamily_zh'">
+  <div id="container" :class="isEnLang ? 'fontfamily_en' : 'fontfamily_zh'"
+  @scroll="handleScrollScroll($event)">
     <HeaderLayout />
     <div id="container_body">
       <router-view />
@@ -8,6 +9,7 @@
     <el-backtop></el-backtop>
     <WalletConnect />
   </div>
+ 
 </template>
 <script>
 import { mapGetters } from "vuex";

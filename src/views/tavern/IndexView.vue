@@ -12,35 +12,128 @@
           <div class="btn">
             <h3>MY TAVERN</h3>
           </div>
+          <div class="btn">
+            <el-button :disabled="false"> {{ $t("tavern.text5") }} </el-button>
+          </div>
         </div>
       </div>
       <div class="rightbox">
         <div class="title">
           <div>{{ $t("tavern.text1") }}</div>
         </div>
-        <ul class="list">
-          <li>
-            <ul>
-              <li>
-                <div>
-                  {{ $t("class.text8") }} <span>{{}}</span>
-                  {{ $t("class.text6") }}:<span>{{}}</span>
-                  {{ $t("class.text7") }}:<span>{{}}</span>
-                  {{ $t("class.text9") }}:<span>{{}}</span>
-                </div>
-              </li>
-            </ul>
-          </li>
-        </ul>
+        <div class="content">
+          <table class="hero list">
+            <thead>
+              <tr>
+                <!--加载表头-->
+                <td>{{ $t("class.text11") }}</td>
+                <td>{{ $t("class.text12") }}</td>
+                <td>{{ $t("class.text6") }}</td>
+                <td>{{ $t("class.text7") }}</td>
+                <td>{{ $t("class.text8") }}</td>
+                <td>{{ $t("class.text9") }}</td>
+                <td>{{ $t("class.text10") }}</td>
+              </tr>
+            </thead>
+            <!--列表加载自动滚动-->
+            <tbody @scroll="myHeroListLoad">
+              <!--加载点击事件获取选定符合条件的英雄-->
+              <tr v-for="(item, index) in tableData" :key="index" @click="chooseTokenId(item)">
+                <!--加载单选-->
+                <span>
+                  <input type="radio" :value="item.tokenId" v-model="radio">
+                  <img src="@/assets/cdn/images/sleep.png" alt />
+                </span>
+                <th>{{ index + 1 }}</th>
+                <th>{{ item.tokenId }}</th>
+                <th>{{ item.class }}</th>
+                <th>{{ item.LV }}</th>
+                <th>{{ item.exp }}</th>
+                <th>{{ item.Stamina }}</th>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-
 export default {
   name: "TAVERN",
+  data() {
+    return {
+      tableData: [{
+        tokenId: '0x0001',
+        class: '2',
+        LV: '2',
+        exp: '20',
+        Stamina: 50,
+      }, {
+        tokenId: '0x0002',
+        class: '11',
+        LV: '12',
+        exp: '13',
+        Stamina: 200333,
+      }, {
+        tokenId: '0x0003',
+        class: '11',
+        LV: '12',
+        exp: '13',
+        Stamina: 200333,
+      }, {
+        tokenId: '0x0004',
+        class: '11',
+        LV: '12',
+        exp: '13',
+        Stamina: 200333,
+      }, {
+        tokenId: '0x0005',
+        class: '11',
+        LV: '12',
+        exp: '13',
+        Stamina: 200333,
+      }, {
+        tokenId: '0x0006',
+        class: '11',
+        LV: '12',
+        exp: '13',
+        Stamina: 200333,
+      }, {
+        tokenId: '0x0007',
+        class: '11',
+        LV: '12',
+        exp: '13',
+        Stamina: 200333,
+      }, {
+        tokenId: '0x0008',
+        class: '11',
+        LV: '12',
+        exp: '13',
+        Stamina: 200333,
+      },],
+      radio: '',
+    }
+  },
+  mounted() {
+
+  },
+  methods: {
+    myHeroListLoad(e) {
+      const scrollHeight = e.target.scrollHeight || e.srcElement.scrollHeight;
+      const clientHeight = e.target.clientHeight || e.srcElement.clientHeight;
+      const scrollTop = e.target.scrollTop || e.srcElement.scrollTop;
+      if (scrollTop >= scrollHeight - clientHeight - 10) {
+        console.log("我的英雄，加载下一页");
+      }
+    },
+
+    chooseTokenId(item) {
+      this.radio = item.tokenId;
+      console.log('获取选定的地址进行探险', this.radio);
+    },
+  },
 };
 </script>
 
@@ -132,6 +225,7 @@ export default {
           width: 50%;
           height: auto;
         }
+
         &:last-child {
           margin-right: 0;
         }
@@ -212,81 +306,84 @@ export default {
     }
   }
 
-  >.list {
+  // tbody 滚动
+  table tbody {
+    display: block;
+    overflow-x: scroll;
+    overflow-y: scroll;
+  }
+
+  table thead,
+  tbody tr,
+  tfoot tr,
+  thead tr {
     width: 100%;
-    height: 6rem;
-    padding: 0 0.2rem;
-    overflow-y: auto;
+    display: table;
+    table-layout: fixed;
+    //overflow-x: scroll;
+    overflow-y: scroll;
+  }
 
-    >li {
+  .content {
+    width: 100%;
+    padding: 0.1rem 0.3rem;
+    font-size: 0.15rem;
+    font-weight: 600;
+
+    .hero.list {
+      margin-bottom: 0.3rem;
       width: 100%;
-      background: rgba(24, 24, 28, 0.8);
-      border-radius: 0.06rem;
-      border: 1px solid #4e4e52;
-      margin: 0.2rem 0;
-      padding: 0 0.2rem 0 0.4rem;
+      height: auto;
+      font-size: 0.18rem;
+      font-weight: 400;
+      text-align: center;
 
-      ul {
-        li {
-          cursor: pointer;
-          margin: 0.2rem 0;
+      thead {
+        tr {
+          height: 0.4rem;
+          line-height: 0.5rem;
+          padding-right: 0.05rem;
+          background: rgba(24, 24, 28, 0.8);
+          border: 1px solid #3b3b49;
+          border-radius: 0.06rem;
 
-          &:nth-child(1) {
-            font-size: 0.15rem;
-            font-weight: 300;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+          td {
+            //border-radius: 0.06rem;
+          }
+        }
+      }
 
-            span {
-              display: inline-block;
-              background: #000000;
-              border-radius: 0.1rem;
-              margin: 0 0.2rem;
-              padding: 0 0.2rem;
-            }
+      tbody {
+        max-height: 4rem;
+        -webkit-overflow-scrolling: touch; // 为了滚动顺畅
 
-            .status {
-              font-size: 0.12rem;
-              font-weight: 600;
-              color: #00b2fe;
-            }
+        tr {
+          height: 0.4rem;
+          line-height: 0.5rem;
+          font-size: 0.17rem;
+
+          img {
+            vertical-align: middle;
+            width: 0.4rem;
+            height: 0.4rem;
+            margin-left: 5px;
+            //margin-top: 0.2rem;
           }
 
-          &:nth-child(2) {
-            font-size: 0.2rem;
-            font-weight: 600;
-            position: relative;
-
-            img {
-              width: 0.12rem;
-              height: auto;
-              position: absolute;
-              left: -0.25rem;
-              top: 0.08rem;
-            }
-          }
-
-          &:nth-child(3) {
-            font-size: 0.15rem;
-            font-weight: 300;
-          }
-
-          &:nth-child(4) {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-size: 0.12rem;
-            font-weight: 600;
-            color: #00b2fe;
-
-            span {
-              margin-right: 0.1rem;
-            }
+          &:hover {
+            // background: rgba(24, 24, 28, 0.8);
+            // border-radius: 0.06rem;
+            background: linear-gradient(90deg, #ac4711 0%, #d47221 100%);
+            box-shadow: 0px 0px 8px 4px #000000;
           }
         }
       }
     }
+  }
+
+  ::-webkit-scrollbar {
+    /* 隐藏滚动条 */
+    display: none;
   }
 }
 
@@ -328,17 +425,6 @@ export default {
         }
       }
 
-      .linklist {
-        width: fit-content;
-        margin: 0.1rem auto;
-
-        a {
-          width: 0.25rem;
-          height: 0.15rem;
-          margin-right: 0.02rem;
-        }
-      }
-
       .lis {
         width: 70%;
         padding: 0.1rem;
@@ -371,6 +457,11 @@ export default {
     }
   }
 
+  ::-webkit-scrollbar {
+    /* 隐藏滚动条 */
+    display: none;
+  }
+
   .rightbox {
     width: 100%;
     padding: 0 0.1rem;
@@ -388,59 +479,73 @@ export default {
       }
     }
 
-    >.list {
+    table tbody {
+      display: block;
+      overflow-x: hidden;
+      overflow-y: scroll;
+    }
+
+    table thead,
+    tbody tr,
+    tfoot tr,
+    thead tr {
       width: 100%;
-      height: 4rem;
-      padding: 0 0.1rem;
+      display: table;
+      table-layout: fixed;
+    }
 
-      >li {
-        margin: 0.1rem 0;
-        padding: 0 0.1rem 0 0.2rem;
+    .content {
+      width: 100%;
+      padding: 0.1rem 0.3rem;
+      font-size: 0.15rem;
+      font-weight: 600;
+      overflow-y: auto;
 
-        ul {
-          li {
-            margin: 0.1rem 0;
+      .hero.list {
+        margin-bottom: 0.4rem;
+        width: 4.9rem;
+        height: auto;
+        font-size: 0.18rem;
+        font-weight: 400;
+        text-align: center;
 
-            &:nth-child(1) {
-              font-size: 0.12rem;
-              font-weight: 600;
+        thead {
+          tr {
+            height: 0.4rem;
+            line-height: 0.5rem;
+            padding-right: 0.05rem;
+            background: rgba(24, 24, 28, 0.8);
+            border: 1px solid #3b3b49;
+            border-radius: 0.06rem;
 
-              span {
-                margin: 0 0.05rem;
-                padding: 0 0.1rem;
-              }
-
-              .status {
-                font-size: 0.12rem;
-                font-weight: 600;
-                color: #00b2fe;
-              }
+            td {
+              //border-radius: 0.06rem;
             }
+          }
+        }
 
-            &:nth-child(2) {
-              font-size: 0.15rem;
-              font-weight: 600;
+        tbody {
+          max-height: 4rem;
+          -webkit-overflow-scrolling: touch; // 为了滚动顺畅
 
-              img {
-                width: 0.08rem;
-                left: -0.15rem;
-                top: 0.05rem;
-              }
-            }
+          tr {
+            height: 0.4rem;
+            line-height: 0.5rem;
+            font-size: 0.17rem;
+          }
+        }
 
-            &:nth-child(3) {
-              font-size: 0.12rem;
-              font-weight: 300;
-            }
+        .table_td_btn {
+          display: flex;
+          align-items: center;
+          justify-content: center;
 
-            &:nth-child(4) {
-              font-size: 0.12rem;
-              font-weight: 600;
-
-              span {
-                margin-right: 0.05rem;
-              }
-            }
+          .el-button {
+            width: 0.7rem;
+            height: 0.3rem;
+            font-size: 0.12rem;
+            font-weight: 400;
+            margin-left: 0.1rem;
           }
         }
       }

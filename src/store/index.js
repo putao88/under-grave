@@ -5,7 +5,6 @@ import underGraveStore from "./modules/underGrave";
 
 
 Vue.use(Vuex);
-
 export default new Vuex.Store({
   state: {},
   mutations: {},

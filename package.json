@@ -11,7 +11,7 @@
     "@walletconnect/web3-provider": "^1.4.1",
     "axios": "^1.2.0",
     "core-js": "^3.8.3",
-    "element-ui": "^2.15.12",
+    "element-ui": "^2.15.11",
     "ethers": "^5.7.2",
     "node-polyfill-webpack-plugin": "^2.0.1",
     "node-sass": "^8.0.0",

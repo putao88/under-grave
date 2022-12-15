@@ -32,7 +32,7 @@ const routes = [
 
   {
     path: "/dashboard",
-    // name: "DASHBOARD",
+     name: "DASHBOARD",
     component: () => import("../views/dashboard/IndexView.vue"),
   },
   { path: "*", redirect: "/home" },

@@ -5,7 +5,7 @@
         <span>{{ $t("expedition.text1") }}</span>
       </div>-->
       <ul class="card_list">
-        <li>
+        <li @click="expeditionFirst">
           <div class="top"><img src="~@/assets/cdn/images/door1.png" alt="" /></div>
           <div class="center"><img src="~@/assets/cdn/images/activity_005.png" alt="" /></div>
           <div class="bottom">
@@ -17,12 +17,10 @@
               <pre>{{ $t("expedition.text16") }}:50</pre>
             </div>
           </div>
-
-          <el-button @click="expedition">{{ $t("expedition.text1") }}
+          <el-button>{{ $t("expedition.text1") }}
           </el-button>
-
         </li>
-        <li>
+        <li @click="expeditionSecond">
           <div class="top"><img src="~@/assets/cdn/images/door2.png" alt="" /></div>
           <div class="center"><img src="~@/assets/cdn/images/activity_006.png" alt="" /></div>
           <div class="bottom">
@@ -34,10 +32,10 @@
               <pre>{{ $t("expedition.text16") }}:150</pre>
             </div>
           </div>
-          <el-button @click="expedition">{{ $t("expedition.text1") }}
+          <el-button>{{ $t("expedition.text1") }}
           </el-button>
         </li>
-        <li>
+        <li @click="expeditionThird">
           <div class="top"><img src="~@/assets/cdn/images/door3.png" alt="" /></div>
           <div class="center"><img src="~@/assets/cdn/images/activity_007.png" alt="" /></div>
           <div class="bottom">
@@ -49,10 +47,10 @@
               <pre>{{ $t("expedition.text16") }}:500</pre>
             </div>
           </div>
-          <el-button @click="expedition">{{ $t("expedition.text1") }}
+          <el-button>{{ $t("expedition.text1") }}
           </el-button>
         </li>
-        <li>
+        <li @click="expeditionForth">
           <div class="top"><img src="~@/assets/cdn/images/door4.png" alt="" /></div>
           <div class="center"><img src="~@/assets/cdn/images/activity_008.png" alt="" /></div>
           <div class="bottom">
@@ -64,11 +62,10 @@
               <pre>{{ $t("expedition.text16") }}:1000</pre>
             </div>
           </div>
-          <el-button @click="expedition">{{ $t("expedition.text1") }}
+          <el-button>{{ $t("expedition.text1") }}
           </el-button>
         </li>
       </ul>
-
       <div class="box3">
         <div class="box1">
           <div class="title">
@@ -76,21 +73,123 @@
             <div>{{ $t("expedition.text17") }}</div>
           </div>
           <div class="content">
-            <pre>{{ $t("expedition.text5") }}</pre>
+            <table class="hero list">
+              <thead>
+                <tr>
+                  <!--表头-->
+                  <td>{{ $t("class.text11") }}</td>
+                  <td>{{ $t("class.text12") }}</td>
+                  <td>{{ $t("class.text6") }}</td>
+                  <td>{{ $t("class.text7") }}</td>
+                  <td>{{ $t("class.text8") }}</td>
+                  <td>{{ $t("class.text9") }}</td>
+                  <td>{{ $t("class.text10") }}</td>
+                </tr>
+              </thead>
+              <!--列表加载自动滚动-->
+              <tbody @scroll="myHeroListLoad">
+                <!--加载点击事件获取选定符合条件的英雄-->
+                <tr v-for="(item, index) in tableData" :key="index" @click="chooseTokenId(item)">
+                  <!--加载单选-->
+                  <span>
+                    <input type="radio" :value="item.tokenId" v-model="radio">
+                    <img src="@/assets/cdn/images/battle2.png" alt />
+                  </span>
+                  <th>{{ index + 1 }}</th>
+                  <th>{{ item.tokenId }}</th>
+                  <th>{{ item.class }}</th>
+                  <th>{{ item.LV }}</th>
+                  <th>{{ item.exp }}</th>
+                  <th>{{ item.Stamina }}</th>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
     </div>
-
-
   </div>
 </template>
 
 <script>
+import {heroType,heroNftProficiency, heroNftLevel, HeroEndurance, gethero, expeditionFirst, expeditionSecond, expeditionThird, expeditionForth } from '../expedition/battle';
+
 
 export default {
   name: "EXPEDITION",
+  data() {
+    return {
+      tableData: [],
+      radio: '',
+      tokenId: [],
+      Stamina: [],
+      LV: [],
+      exp: [],
+      class: []
+    }
+  },
+  mounted() {
+    this.getHeroInfo();
+  },
+
+  methods: {
+    myHeroListLoad(e) {
+      const scrollHeight = e.target.scrollHeight || e.srcElement.scrollHeight;
+      const clientHeight = e.target.clientHeight || e.srcElement.clientHeight;
+      const scrollTop = e.target.scrollTop || e.srcElement.scrollTop;
+      if (scrollTop >= scrollHeight - clientHeight - 10) {
+        console.log("我的英雄，加载下一页");
+      }
+    },
+
+    //获取英雄详细信息添加数据
+    async getHeroInfo() {
+     this.tokenId = await gethero()
+      this.Stamina = await HeroEndurance(this.tokenId)
+      this.LV = await heroNftLevel(this.tokenId)
+      this.exp = await heroNftProficiency(this.tokenId)
+      this.class = await heroType(this.tokenId)
+      console.log(this.tokenId.length)
+      for (let i = 0; i < this.tokenId.length; i++) {
+        let Id = ''
+        let IdStamina = ''
+        let IdLV = ''
+        let Idexp = ''
+        let Idclass = ''
+        Id += this.tokenId[i]
+        IdStamina += this.Stamina[i]
+        IdLV += this.LV[i]
+        Idexp += this.exp[i]
+        Idclass += this.class[i]
+        this.tableData.push({ tokenId: Id, class: Idclass, LV: IdLV, exp: Idexp, Stamina: IdStamina, })
+      }
+    },
+
+    chooseTokenId(item) {
+      this.radio = item.tokenId;
+      console.log('获取选定的地址进行探险', this.radio);
+    },
+    expeditionFirst() {
+      const tokenId = this.radio
+      expeditionFirst(tokenId)
+    },
+    expeditionSecond() {
+      const tokenId = this.radio
+      expeditionSecond(tokenId)
+    },
+    expeditionThird() {
+      const tokenId = this.radio
+      expeditionThird(tokenId)
+    },
+    expeditionForth() {
+      const tokenId = this.radio
+      expeditionForth(tokenId)
+    },
+  },
 };
+
+
+
 </script>
 
 <style lang="scss" scoped>
@@ -99,6 +198,8 @@ export default {
   padding: 0.8rem 0;
   background: url(~@/assets/cdn/images/landform_1201.png) no-repeat;
   background-size: 100% 100%;
+
+  flex-wrap: wrap;
 }
 
 .box {
@@ -130,7 +231,7 @@ export default {
   height: 5.5rem;
   overflow-x: hidden;
   overflow-y: auto;
-  margin: 0 auto;
+  margin: 0.7rem auto;
 
   li {
 
@@ -223,22 +324,30 @@ export default {
       background-position: center;
       margin: 0.1rem 0 0 0.7rem;
     }
-
-    .angle2 {
-      width: 0.1rem;
-      height: auto;
-      position: absolute;
-      right: 0.1rem;
-      bottom: 0.1rem;
-      opacity: 0;
-    }
   }
 }
+
+// tbody 滚动
+table tbody {
+  display: block;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+table thead,
+tbody tr,
+tfoot tr,
+thead tr {
+  width: 100%;
+  display: table;
+  table-layout: fixed;
+}
+
 
 .box3 {
   width: 100%;
   height: auto;
-  padding: 0.5rem;
+  padding: 0.2rem;
 
   .box1 {
     width: 100%;
@@ -261,7 +370,7 @@ export default {
       align-items: center;
       justify-content: space-between;
       padding: 0 0.2rem;
-      width: 13%;
+      width: 17%;
       height: 0.5rem;
       font-size: 0.2rem;
       font-weight: 600;
@@ -276,10 +385,75 @@ export default {
 
     .content {
       width: 100%;
-      padding: 0.2rem 0.5rem;
+      padding: 0.1rem 0.3rem;
       font-size: 0.15rem;
       font-weight: 600;
       overflow-y: auto;
+
+      .hero.list {
+        margin-bottom: 0.4rem;
+        width: 100%;
+        height: auto;
+        font-size: 0.18rem;
+        font-weight: 400;
+        text-align: center;
+
+        thead {
+          tr {
+            height: 0.3rem;
+            line-height: 0.5rem;
+            padding-right: 0.05rem;
+            background: rgba(24, 24, 28, 0.8);
+            border-radius: 0.06rem;
+            border: 1px solid #3b3b49;
+
+            td {
+              //border-radius: 0.06rem;
+            }
+          }
+        }
+
+        tbody {
+          max-height: 3rem;
+          -webkit-overflow-scrolling: touch; // 为了滚动顺畅
+
+          tr {
+            height: 0.6rem;
+            line-height: 0.6rem;
+            font-size: 0.17rem;
+
+            img {
+              vertical-align: middle;
+              width: 0.4rem;
+              height: 0.4rem;
+              margin-left: 5px;
+              //margin-top: 0.2rem;
+            }
+
+            &:hover {
+              // background: rgba(24, 24, 28, 0.8);
+              // border-radius: 0.06rem;
+              background: linear-gradient(90deg, #ac4711 0%, #d47221 100%);
+              box-shadow: 0px 0px 8px 4px #000000;
+            }
+
+
+          }
+        }
+      }
+    }
+
+    .row {
+      width: 100%;
+      background: #282834;
+      border-radius: 0.1rem;
+      padding: 0.1rem 0.2rem;
+      margin-bottom: 0.2rem;
+
+      &:nth-child(2),
+      &:nth-child(3) {
+        width: 49.5%;
+      }
     }
   }
 }
@@ -295,25 +469,13 @@ export default {
     height: auto;
   }
 
-  .box_title {
-    margin: 0.3rem 0;
-  }
-
-  .row_title {
-    text-align: center;
-    font-size: 0.25rem;
-    font-weight: bold;
-    color: #ce6519;
-    margin-bottom: 0.3rem;
-    background-size: 60%;
-  }
 
   .card_list {
     width: 90%;
     height: 6rem;
 
     li {
-      width: 1.6rem;
+      width: 1.62rem;
       height: 3.1rem;
       margin: 0 0.1rem 0.1rem 0;
       border-radius: 0.05rem;
@@ -397,10 +559,81 @@ export default {
         }
       }
 
+      ::-webkit-scrollbar {
+        /* 隐藏滚动条 */
+        display: none;
+      }
+
+      table tbody {
+        display: block;
+        overflow-x: hidden;
+        overflow-y: scroll;
+      }
+
+      table thead,
+      tbody tr,
+      tfoot tr,
+      thead tr {
+        width: 100%;
+        display: table;
+        table-layout: fixed;
+      }
+
       .content {
         width: 100%;
-        padding: 0.1rem 0.2rem;
-        font-size: 0.12rem;
+        padding: 0.1rem 0.3rem;
+        font-size: 0.15rem;
+        font-weight: 600;
+        overflow-y: auto;
+
+        .hero.list {
+          margin-bottom: 0.4rem;
+          width: 6rem;
+          height: auto;
+          font-size: 0.18rem;
+          font-weight: 400;
+          text-align: center;
+
+          thead {
+            tr {
+              height: 0.4rem;
+              line-height: 0.5rem;
+              padding-right: 0.05rem;
+              background: rgba(24, 24, 28, 0.8);
+              border: 1px solid #3b3b49;
+              border-radius: 0.06rem;
+
+              td {
+                //border-radius: 0.06rem;
+              }
+            }
+          }
+
+          tbody {
+            max-height: 4rem;
+            -webkit-overflow-scrolling: touch; // 为了滚动顺畅
+
+            tr {
+              height: 0.4rem;
+              line-height: 0.5rem;
+              font-size: 0.17rem;
+            }
+          }
+
+          .table_td_btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            .el-button {
+              width: 0.7rem;
+              height: 0.3rem;
+              font-size: 0.12rem;
+              font-weight: 400;
+              margin-left: 0.1rem;
+            }
+          }
+        }
       }
     }
   }

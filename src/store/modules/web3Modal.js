@@ -8,7 +8,7 @@ const web3ModalStore = {
     library: getLibrary(),
     active: false,
     account: null,
-    chainId: 97,
+    chainId: 0,
   },
   mutations: {
     setWeb3Modal(state, web3Modal) {
