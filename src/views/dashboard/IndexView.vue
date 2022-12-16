@@ -7,19 +7,19 @@
             <img src="~@/assets/cdn/images/09.png" alt="" />
           </div>
           <div class="hero_img">
-            <div><i><img src="~@/assets/cdn/images/Cardback02.png" alt="" /></i></div>
+            <div><i><img :src="heroImg" alt="" /></i></div>
           </div>
           <div class="lis">
             <div><i><img src="~@/assets/cdn/images/card.svg" alt="" /></i>{{ $t("tavern.text2") }}</div>
-            <div>{{ }}</div>
+            <div>{{ getHeroData.data.length }}</div>
           </div>
-          <div class="lis">
+          <!-- <div class="lis">
             <div><i class="iconfont pcCustomermanagement-fill"></i>{{ $t("tavern.text41") }}</div>
             <div>{{ }}</div>
-          </div>
+          </div> -->
           <div class="lis">
             <div><i class="iconfont pczijin"></i>{{ $t("tavern.text40") }}</div>
-            <div>{{ }} BNB</div>
+            <div>{{ reward }} BNB</div>
           </div>
           <div class="btn">
             <el-button :disabled="false"> {{ $t("tavern.text3") }} </el-button>
@@ -48,12 +48,12 @@
             <tbody v-loading="loading" @scroll="myHeroListLoad">
               <!--加载点击事件获取选定符合条件的英雄-->
               <template  v-if="getHeroData.data.length">
-                <tr v-for="(item, index) in getHeroData.data" :key="index" @click="chooseTokenId(item)">
+                <tr v-for="(item, index) in getHeroData.data" :class="{active: tokenId === item.tokenId}" :key="index" @click="chooseTokenId(item)">
                   <!--加载单选-->
                   <span>
-                    <el-button type="radio" :value="item.tokenId" v-model="radio"><img src="@/assets/cdn/images/up.png"
+                    <el-button><img @click.stop="upgradeHero(item.tokenId)" src="@/assets/cdn/images/up.png"
                       alt /></el-button>
-                  <!-- <input type="radio" :value="item.tokenId" v-model="radio"> -->
+                  <!-- <input type="radio" :value="item.tokenId" v-model="tokenId"> -->
                   </span>
                   <th>{{ index + 1 }}</th>
                   <th>{{ item.tokenId }}</th>
@@ -76,15 +76,26 @@
 
 <script>
 
+import Web3 from 'web3'
 import { heroType } from '@/utils/tools'
 import { mapActions, mapGetters } from 'vuex';
+import { gameAddress } from "../../abi/contractdata";
+import GameAbi from "../../abi/Game.json";
+
+const hero = {
+  1: 'Mage_',
+  2: 'Warrior_',
+  3: 'Swordsman_'
+}
 
 export default {
   name: "DASHBOARD",
   data() {
     return {
       loading: false,
-      radio: '',
+      heroImg: require('@/assets/cdn/images/Cardback02.png'),
+      reward: '',
+      tokenId: '',
     }
   },
   computed: {
@@ -109,10 +120,85 @@ export default {
       }
     },
 
-    chooseTokenId(item) {
-      this.radio = item.tokenId;
-      console.log('获取选定的英雄升级', this.radio);
+    async chooseTokenId(item) {
+      const { lv, type, tokenId } = item
+      this.tokenId = tokenId;
+      let suffix = 'a'
+      if (lv >= 21) {
+        suffix = 'ss'
+      } else if (lv >= 11) {
+        suffix = 's'
+      } else if (lv >= 5) {
+        suffix = 'b'
+      } else {
+        suffix = 'a'
+      }
+      
+      if (window.ethereum) {
+        console.log('rewards', tokenId);
+        let web3 = new Web3(window.web3.currentProvider);
+        const fromAddress = await web3.eth.getAccounts();
+        const battlecontract = new web3.eth.Contract(GameAbi, gameAddress)
+
+        battlecontract.methods.rewards(fromAddress[0]).call().then((res) => {
+          this.heroImg = require('@/assets/cdn/images/' + hero[type] + suffix + '.png')
+          this.reward = res / 10 ** 18
+          console.log(res, this.reward)
+        }).catch(err => {
+          let str = `获取rewards失败`
+          if (err.code === 4001) {
+            str += `: ${err.message}`
+          }
+          this.$message.error(str)
+        })
+      }
     },
+    async claimRewards() {
+      if (window.ethereum) {
+        console.log('领取');
+        let web3 = new Web3(window.web3.currentProvider);
+        const fromAddress = await web3.eth.getAccounts();
+        const battlecontract = new web3.eth.Contract(GameAbi, gameAddress)
+
+        this.$bus.$emit('global-loading', true)
+        battlecontract.methods.claimRewards().send({ from: fromAddress[0] }).then((res) => {
+          // this.reward = res / 10 ** 18
+          console.log(res, '--------')
+        }).catch(err => {
+          let str = `领取失败`
+          if (err.code === 4001) {
+            str += `: ${err.message}`
+          }
+          this.$message.error(str)
+          console.log(err, '22222222')
+        }).finally(() => {
+          this.$bus.$emit('global-loading', false)
+        })
+      }
+    },
+    async upgradeHero(tokenId) {
+      if (window.ethereum) {
+        console.log('升级', tokenId);
+        let web3 = new Web3(window.web3.currentProvider);
+        const fromAddress = await web3.eth.getAccounts();
+        const battlecontract = new web3.eth.Contract(GameAbi, gameAddress)
+
+        this.$bus.$emit('global-loading', true)
+        battlecontract.methods.upgradeHero(tokenId).send({ from: fromAddress[0] }).then((res) => {
+          console.log(res, '11111111')
+          this.$message.error('升级成功')
+        }).catch(err => {
+          let str = `升级失败`
+          if (err.code === 4001) {
+            str += `: ${err.message}`
+          }
+          this.$message.error(str)
+          console.log(err, '22222222')
+        }).finally(() => {
+          this.$bus.$emit('global-loading', false)
+        })
+      }
+    }
   },
 };
 </script>
@@ -562,5 +648,9 @@ export default {
 .no-data {
   height: 4rem;
   line-height: 4rem;
+}
+.active {
+  background: linear-gradient(90deg, #38697f 0%, #5d4c78 100%);
+  box-shadow: 0px 0px 8px 4px #000000;
 }
 </style>

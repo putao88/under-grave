@@ -219,16 +219,16 @@ export default {
         let countAmount = this.daoList[index].buyAmount;
         let params = {
           from: fromAddress[0],
-          value: countAmount * p
+          value: countAmount * p * (10 ** 17)
         }
         this.$bus.$emit('global-loading', true)
         PresaleContract.methods[type](countAmount)
           .send(params).then(() => {
             // TODO?
-            this.$message.warning('购买成功')
+            this.$message.success('购买成功')
           }).catch(err => {
             if (err.code === 4001) {
-              this.$message.warning(`购买失败: ${err.message}`)
+              this.$message.error(`购买失败: ${err.message}`)
             }
           }).finally(() => {
             this.$bus.$emit('global-loading', false)

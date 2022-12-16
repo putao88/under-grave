@@ -5,7 +5,7 @@
         <span>{{ $t("expedition.text1") }}</span>
       </div>-->
       <ul class="card_list">
-        <li @click="expeditionFirst">
+        <li @click="expedition('expeditionFirst')">
           <div class="top"><img src="~@/assets/cdn/images/door1.png" alt="" /></div>
           <div class="center"><img src="~@/assets/cdn/images/activity_005.png" alt="" /></div>
           <div class="bottom">
@@ -20,7 +20,7 @@
           <el-button>{{ $t("expedition.text1") }}
           </el-button>
         </li>
-        <li @click="expeditionSecond">
+        <li @click="expedition('expeditionSecond')">
           <div class="top"><img src="~@/assets/cdn/images/door2.png" alt="" /></div>
           <div class="center"><img src="~@/assets/cdn/images/activity_006.png" alt="" /></div>
           <div class="bottom">
@@ -35,7 +35,7 @@
           <el-button>{{ $t("expedition.text1") }}
           </el-button>
         </li>
-        <li @click="expeditionThird">
+        <li @click="expedition('expeditionThird')">
           <div class="top"><img src="~@/assets/cdn/images/door3.png" alt="" /></div>
           <div class="center"><img src="~@/assets/cdn/images/activity_007.png" alt="" /></div>
           <div class="bottom">
@@ -50,7 +50,7 @@
           <el-button>{{ $t("expedition.text1") }}
           </el-button>
         </li>
-        <li @click="expeditionForth">
+        <li @click="expedition('expeditionForth')">
           <div class="top"><img src="~@/assets/cdn/images/door4.png" alt="" /></div>
           <div class="center"><img src="~@/assets/cdn/images/activity_008.png" alt="" /></div>
           <div class="bottom">
@@ -93,7 +93,7 @@
                   <tr v-for="(item, index) in getHeroData.data" :key="index" @click="chooseTokenId(item)">
                     <!--加载单选-->
                     <span>
-                      <input type="radio" :value="item.tokenId" v-model="radio">
+                      <input type="radio" :value="item.tokenId" v-model="tokenId">
                       <img src="@/assets/cdn/images/battle2.png" alt />
                     </span>
                     <th>{{ index + 1 }}</th>
@@ -118,15 +118,17 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import { expeditionFirst, expeditionSecond, expeditionThird, expeditionForth } from '../expedition/battle';
 import { heroType } from '@/utils/tools'
+import GameAbi from "../../abi/Game.json";
+import { gameAddress } from "../../abi/contractdata";
+import Web3 from 'web3'
 
 export default {
   name: "EXPEDITION",
   data() {
     return {
       loading: false,
-      radio: '',
+      tokenId: '',
     }
   },
   computed: {
@@ -155,25 +157,41 @@ export default {
     },
 
     chooseTokenId(item) {
-      this.radio = item.tokenId;
-      console.log('获取选定的地址进行探险', this.radio);
+      this.tokenId = item.tokenId;
+      console.log('获取选定的地址进行探险', this.tokenId);
     },
-    expeditionFirst() {
-      const tokenId = this.radio
-      expeditionFirst(tokenId)
-    },
-    expeditionSecond() {
-      const tokenId = this.radio
-      expeditionSecond(tokenId)
-    },
-    expeditionThird() {
-      const tokenId = this.radio
-      expeditionThird(tokenId)
-    },
-    expeditionForth() {
-      const tokenId = this.radio
-      expeditionForth(tokenId)
-    },
+    async expedition(type) {
+      if (!this.tokenId) {
+        this.$message.warning('请选择英雄后进行战斗')
+        return
+      }
+      // 英雄战斗接口
+      if (window.ethereum) {
+        console.log('探险');
+        console.log(this.tokenId);
+        let web3 = new Web3(window.web3.currentProvider);
+        const fromAddress = await web3.eth.getAccounts();
+        const battlecontract = new web3.eth.Contract(GameAbi, gameAddress)
+
+        this.$bus.$emit('global-loading', true)
+        battlecontract.methods[type](this.tokenId).send({ from: fromAddress[0], value: 1 * (10 ** 2) }).then(async (res) => {
+          console.log(res, '11111111')
+          // 获取奖励接口
+          const rewards = await battlecontract.methods.rewards(fromAddress[0]).call()
+          this.$bus.$emit('global-loading', false)
+          console.log(rewards, '33333333')
+        }).catch(err => {
+          if (err.code === 4001) {
+            let str = `战斗失败: ${err.message}`
+            this.$message.error(str)
+          } else {
+            this.$message.error('战斗失败')
+          }
+          console.log(err, '22222222')
+          this.$bus.$emit('global-loading', false)
+        })
+      }
+    }
   },
 };
 
