@@ -21,14 +21,14 @@ import VueAwesomeSwiper from "vue-awesome-swiper";
 import "swiper/dist/css/swiper.css";
 Vue.use(VueAwesomeSwiper);
 
-import {
-  Message,
-} from "element-ui";
+// import {
+//   Message,
+// } from "element-ui";
 Vue.use(ElementUI); 
-Vue.prototype.$message = (option) => {
-  option.customClass = i18n.locale == "en" ? "fontfamily_en" : "fontfamily_zh";
-return Message(option);
-};
+// Vue.prototype.$message = (option) => {
+//   option.customClass = i18n.locale == "en" ? "fontfamily_en" : "fontfamily_zh";
+// return Message(option);
+// };
 
 Vue.config.productionTip = false;
 new Vue({
@@ -36,4 +36,7 @@ new Vue({
   store,
   i18n,
   render: (h) => h(App),
+  beforeCreate() {
+    Vue.prototype.$bus = this
+  }
 }).$mount("#app");

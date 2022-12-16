@@ -87,21 +87,26 @@
                 </tr>
               </thead>
               <!--列表加载自动滚动-->
-              <tbody @scroll="myHeroListLoad">
+              <tbody v-loading="loading" @scroll="myHeroListLoad">
                 <!--加载点击事件获取选定符合条件的英雄-->
-                <tr v-for="(item, index) in tableData" :key="index" @click="chooseTokenId(item)">
-                  <!--加载单选-->
-                  <span>
-                    <input type="radio" :value="item.tokenId" v-model="radio">
-                    <img src="@/assets/cdn/images/battle2.png" alt />
-                  </span>
-                  <th>{{ index + 1 }}</th>
-                  <th>{{ item.tokenId }}</th>
-                  <th>{{ item.class }}</th>
-                  <th>{{ item.LV }}</th>
-                  <th>{{ item.exp }}</th>
-                  <th>{{ item.Stamina }}</th>
-                </tr>
+                <template  v-if="getHeroData.data.length">
+                  <tr v-for="(item, index) in getHeroData.data" :key="index" @click="chooseTokenId(item)">
+                    <!--加载单选-->
+                    <span>
+                      <input type="radio" :value="item.tokenId" v-model="radio">
+                      <img src="@/assets/cdn/images/battle2.png" alt />
+                    </span>
+                    <th>{{ index + 1 }}</th>
+                    <th>{{ item.tokenId }}</th>
+                    <th>{{ heroType(item.type) }}</th>
+                    <th>{{ item.lv }}</th>
+                    <th>{{ item.exp }}</th>
+                    <th>{{ item.stamina }}</th>
+                  </tr>
+                </template>
+                <template v-else>
+                  <div class="no-data">No Data</div>
+                </template>
               </tbody>
             </table>
           </div>
@@ -112,56 +117,40 @@
 </template>
 
 <script>
-import {heroType,heroNftProficiency, heroNftLevel, HeroEndurance, gethero, expeditionFirst, expeditionSecond, expeditionThird, expeditionForth } from '../expedition/battle';
-
+import { mapActions, mapGetters } from 'vuex';
+import { expeditionFirst, expeditionSecond, expeditionThird, expeditionForth } from '../expedition/battle';
+import { heroType } from '@/utils/tools'
 
 export default {
   name: "EXPEDITION",
   data() {
     return {
-      tableData: [],
+      loading: false,
       radio: '',
-      tokenId: [],
-      Stamina: [],
-      LV: [],
-      exp: [],
-      class: []
     }
   },
-  mounted() {
-    this.getHeroInfo();
+  computed: {
+    ...mapGetters('underGrave', ['getHeroData'])
   },
-
+  async mounted() {
+    if (!this.getHeroData.getOnce) {
+      this.loading = true
+      await this.getHeroInfo();
+      this.loading = false
+    }
+  },
+  
   methods: {
+    ...mapActions('underGrave', ['getHeroInfo']),
+    heroType(type) {
+      return heroType(type)
+    },
     myHeroListLoad(e) {
       const scrollHeight = e.target.scrollHeight || e.srcElement.scrollHeight;
       const clientHeight = e.target.clientHeight || e.srcElement.clientHeight;
       const scrollTop = e.target.scrollTop || e.srcElement.scrollTop;
       if (scrollTop >= scrollHeight - clientHeight - 10) {
         console.log("我的英雄，加载下一页");
-      }
-    },
-
-    //获取英雄详细信息添加数据
-    async getHeroInfo() {
-     this.tokenId = await gethero()
-      this.Stamina = await HeroEndurance(this.tokenId)
-      this.LV = await heroNftLevel(this.tokenId)
-      this.exp = await heroNftProficiency(this.tokenId)
-      this.class = await heroType(this.tokenId)
-      console.log(this.tokenId.length)
-      for (let i = 0; i < this.tokenId.length; i++) {
-        let Id = ''
-        let IdStamina = ''
-        let IdLV = ''
-        let Idexp = ''
-        let Idclass = ''
-        Id += this.tokenId[i]
-        IdStamina += this.Stamina[i]
-        IdLV += this.LV[i]
-        Idexp += this.exp[i]
-        Idclass += this.class[i]
-        this.tableData.push({ tokenId: Id, class: Idclass, LV: IdLV, exp: Idexp, Stamina: IdStamina, })
       }
     },
 
@@ -331,7 +320,7 @@ export default {
 table tbody {
   display: block;
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 table thead,
@@ -414,7 +403,7 @@ thead tr {
         }
 
         tbody {
-          max-height: 3rem;
+          height: 3rem;
           -webkit-overflow-scrolling: touch; // 为了滚动顺畅
 
           tr {
@@ -567,7 +556,7 @@ thead tr {
       table tbody {
         display: block;
         overflow-x: hidden;
-        overflow-y: scroll;
+        overflow-y: auto;
       }
 
       table thead,
@@ -637,5 +626,9 @@ thead tr {
       }
     }
   }
+}
+.no-data {
+  height: 3rem;
+  line-height: 3rem;
 }
 </style>

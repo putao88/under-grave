@@ -8,6 +8,13 @@
     </div>
     <el-backtop></el-backtop>
     <WalletConnect />
+    <div 
+      class="global-loading" 
+      v-show="loading"
+      v-loading="loading" 
+      element-loading-spinner="el-icon-loading"
+      element-loading-background="rgba(0, 0, 0, 0.6)">
+    </div>
   </div>
  
 </template>
@@ -21,7 +28,9 @@ import WalletConnect from "../src/components/WalletConnect.vue";
 export default {
   components: { HeaderLayout, FooterLayout, WalletConnect },
   data() {
-    return {};
+    return {
+      loading: false
+    };
   },
   computed: { ...mapGetters(["isEnLang"]) },
   mounted() {
@@ -31,6 +40,9 @@ export default {
     window.addEventListener("resize", () => {
       this.resetRem();
     });
+    this.$bus.$on('global-loading', (e) => {
+      this.loading = e
+    })
   },
   beforeDestroy() {
     window.removeEventListener("load", this.resetRem());
@@ -60,5 +72,12 @@ export default {
       padding-bottom: 0.6rem;
     }
   }
+}
+.global-loading {
+  position: fixed !important;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 9999999;
 }
 </style>

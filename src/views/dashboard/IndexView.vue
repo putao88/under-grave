@@ -45,22 +45,27 @@
               </tr>
             </thead>
             <!--列表加载自动滚动-->
-            <tbody @scroll="myHeroListLoad">
+            <tbody v-loading="loading" @scroll="myHeroListLoad">
               <!--加载点击事件获取选定符合条件的英雄-->
-              <tr v-for="(item, index) in tableData" :key="index" @click="chooseTokenId(item)">
-                <!--加载单选-->
-                <span>
-                  <el-button type="radio" :value="item.tokenId" v-model="radio"><img src="@/assets/cdn/images/up.png"
+              <template  v-if="getHeroData.data.length">
+                <tr v-for="(item, index) in getHeroData.data" :key="index" @click="chooseTokenId(item)">
+                  <!--加载单选-->
+                  <span>
+                    <el-button type="radio" :value="item.tokenId" v-model="radio"><img src="@/assets/cdn/images/up.png"
                       alt /></el-button>
                   <!-- <input type="radio" :value="item.tokenId" v-model="radio"> -->
-                </span>
-                <th>{{ index + 1 }}</th>
-                <th>{{ item.tokenId }}</th>
-                <th>{{ item.class }}</th>
-                <th>{{ item.LV }}</th>
-                <th>{{ item.exp }}</th>
-                <th>{{ item.Stamina }}</th>
-              </tr>
+                  </span>
+                  <th>{{ index + 1 }}</th>
+                  <th>{{ item.tokenId }}</th>
+                  <th>{{ heroType(item.type) }}</th>
+                  <th>{{ item.lv }}</th>
+                  <th>{{ item.exp }}</th>
+                  <th>{{ item.stamina }}</th>
+                </tr>
+              </template>
+              <template v-else>
+                <div class="no-data">No Data</div>
+              </template>
             </tbody>
           </table>
         </div>
@@ -71,66 +76,30 @@
 
 <script>
 
+import { heroType } from '@/utils/tools'
+import { mapActions, mapGetters } from 'vuex';
+
 export default {
   name: "DASHBOARD",
   data() {
     return {
-      tableData: [{
-        tokenId: '0x0001',
-        class: '2',
-        LV: '2',
-        exp: '20',
-        Stamina: 50,
-      }, {
-        tokenId: '0x0002',
-        class: '11',
-        LV: '12',
-        exp: '13',
-        Stamina: 200333,
-      }, {
-        tokenId: '0x0003',
-        class: '11',
-        LV: '12',
-        exp: '13',
-        Stamina: 200333,
-      }, {
-        tokenId: '0x0004',
-        class: '11',
-        LV: '12',
-        exp: '13',
-        Stamina: 200333,
-      }, {
-        tokenId: '0x0005',
-        class: '11',
-        LV: '12',
-        exp: '13',
-        Stamina: 200333,
-      }, {
-        tokenId: '0x0006',
-        class: '11',
-        LV: '12',
-        exp: '13',
-        Stamina: 200333,
-      }, {
-        tokenId: '0x0007',
-        class: '11',
-        LV: '12',
-        exp: '13',
-        Stamina: 200333,
-      }, {
-        tokenId: '0x0008',
-        class: '11',
-        LV: '12',
-        exp: '13',
-        Stamina: 200333,
-      },],
+      loading: false,
       radio: '',
     }
   },
-  mounted() {
-
+  computed: {
+    ...mapGetters('underGrave', ['getHeroData'])
+  },
+  async mounted() {
+    if (!this.getHeroData.getOnce) {
+      this.loading = true
+      await this.getHeroInfo();
+      this.loading = false
+    }
   },
   methods: {
+    ...mapActions('underGrave', ['getHeroInfo']),
+    heroType,
     myHeroListLoad(e) {
       const scrollHeight = e.target.scrollHeight || e.srcElement.scrollHeight;
       const clientHeight = e.target.clientHeight || e.srcElement.clientHeight;
@@ -389,7 +358,7 @@ export default {
       }
 
       tbody {
-        max-height: 4rem;
+        height: 4rem;
         -webkit-overflow-scrolling: touch; // 为了滚动顺畅
 
         tr {
@@ -589,5 +558,9 @@ export default {
       }
     }
   }
+}
+.no-data {
+  height: 4rem;
+  line-height: 4rem;
 }
 </style>

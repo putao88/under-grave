@@ -32,7 +32,7 @@
             <div class="progress_bar">
               <el-progress :percentage="Number(item.percentage)" :color="customColor"></el-progress>
             </div>
-            <el-button @click="click(item.link)">{{ $t(item.text3) }}</el-button>
+            <el-button @click="buyBlindBox(item.link, index)">{{ $t(item.text3) }}</el-button>
           </div>
         </li>
       </ul>
@@ -69,6 +69,14 @@ import { mapGetters } from "vuex";
 import NFTPresale from "../../abi/NFTPresale.json";
 import { NFTPresaleAddress } from "../../abi/contractdata";
 import Web3 from 'web3'
+
+const price = {
+  buyFirst: 1,
+  buySecond: 2,
+  buyThird: 10,
+  buyHouse: 5,
+}
+
 export default {
   name: "HOME",
 
@@ -187,7 +195,6 @@ export default {
           .houseCount()
           .call();
         this.daoList[3].percentage = (this.daoList[3].progressDone / this.daoList[3].progressTotal * 100).toFixed(2)
-        //console.log(this.daoList[3].progressDone);
       } else {
         alert("Please connect the wallet");
       }
@@ -196,12 +203,11 @@ export default {
     handleChange(value) {
       console.log(value);
     },
-    click: function (e) {
-      this[e]();
-    },
-    buyFirst: async function () {
+    async buyBlindBox(type, index) {
       if (window.ethereum) {
-        var web3 = (web3 = new Web3(window.web3.currentProvider));
+        let p = price[type]
+        let currentProvider = window.web3.currentProvider
+        let web3 = new Web3(currentProvider);
         let fromAddress = await web3.eth.getAccounts();
         console.log(fromAddress)
         //let NFTPresaleAddress = "0x993937656B42B13c5f56596460A465B9F8F7179D"; //INO地址
@@ -210,73 +216,23 @@ export default {
           NFTPresaleAddress
         );
         console.log(PresaleContract)
-        let countAmount = this.daoList[0].buyAmount;
-        PresaleContract.methods
-          .buyFirst(countAmount)
-          .send({
-            from: fromAddress[0],
-            value: countAmount * 1 * (10 ** 17)
-          });
-      }
-    },
-    buySecond: async function () {
-      if (window.ethereum) {
-        var web3 = (web3 = new Web3(window.web3.currentProvider));
-        let fromAddress = await web3.eth.getAccounts();
-        console.log(fromAddress)
-        //let NFTPresaleAddress = "0x993937656B42B13c5f56596460A465B9F8F7179D"; //INO地址
-        let PresaleContract = new web3.eth.Contract(
-          NFTPresale,
-          NFTPresaleAddress
-        );
-        console.log(PresaleContract)
-        let countAmount = this.daoList[1].buyAmount;
-        PresaleContract.methods
-          .buySecond(countAmount)
-          .send({
-            from: fromAddress[0],
-            value: countAmount * 2 * (10 ** 17)
-          });
-      }
-    },
-    buyThird: async function () {
-      if (window.ethereum) {
-        var web3 = (web3 = new Web3(window.web3.currentProvider));
-        let fromAddress = await web3.eth.getAccounts();
-        console.log(fromAddress)
-        // let NFTPresaleAddress = "0x993937656B42B13c5f56596460A465B9F8F7179D"; //INO地址
-        let PresaleContract = new web3.eth.Contract(
-          NFTPresale,
-          NFTPresaleAddress
-        );
-        console.log(PresaleContract)
-        let countAmount = this.daoList[2].buyAmount;
-        PresaleContract.methods
-          .buyThird(countAmount)
-          .send({
-            from: fromAddress[0],
-            value: countAmount * 1 * (10 ** 18)
-          });
-      }
-    },
-    buyHouse: async function () {
-      if (window.ethereum) {
-        var web3 = (web3 = new Web3(window.web3.currentProvider));
-        let fromAddress = await web3.eth.getAccounts();
-        console.log(fromAddress)
-        // let NFTPresaleAddress = "0x993937656B42B13c5f56596460A465B9F8F7179D"; //INO地址
-        let PresaleContract = new web3.eth.Contract(
-          NFTPresale,
-          NFTPresaleAddress
-        );
-        console.log(PresaleContract)
-        let countAmount = this.daoList[3].buyAmount;
-        PresaleContract.methods
-          .buyHouse(countAmount)
-          .send({
-            from: fromAddress[0],
-            value: countAmount * 5 * (10 ** 17)
-          });
+        let countAmount = this.daoList[index].buyAmount;
+        let params = {
+          from: fromAddress[0],
+          value: countAmount * p
+        }
+        this.$bus.$emit('global-loading', true)
+        PresaleContract.methods[type](countAmount)
+          .send(params).then(() => {
+            // TODO?
+            this.$message.warning('购买成功')
+          }).catch(err => {
+            if (err.code === 4001) {
+              this.$message.warning(`购买失败: ${err.message}`)
+            }
+          }).finally(() => {
+            this.$bus.$emit('global-loading', false)
+          })
       }
     },
 
