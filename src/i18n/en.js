@@ -62,6 +62,8 @@ export default {
     text15: "Expert",
     text16: "Stamina Expedite",
     text17: "My Hero",
+    text18: "Please select your hero",
+    text19: "The expedition failed",
   },
   tavern: {
     text1: "Stats",
@@ -128,6 +130,7 @@ export default {
   },
   status: {
     text9: "Closed",
+    text10: "Open",
   },
   tips: {
     text1: "Comming Soon",

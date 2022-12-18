@@ -1,14 +1,14 @@
 /* eslint-disable no-irregular-whitespace */
 export default {
   nav: {
-    text1: "预售",
+    text1: "預售",
     text2: "招募",
-    text3: "探险",
-    text4: "酒馆",
+    text3: "探險",
+    text4: "酒館",
     text5: "看板",
-    text6: "连接",
-    text7: "断开连接",
-    text8: "市场",
+    text6: "連接",
+    text7: "斷開連接",
+    text8: "市場",
     text9: "更多",
   },
   footer: {
@@ -17,37 +17,42 @@ export default {
   home: {
     text1: `UnderGrave`,
     text2: `
-    欢迎来到地下墓穴！一款对抗僵尸的 NFT 格斗游戏。这些丧尸不断地寻找着人肉，并已形成军队，在不同的地下墓穴中游荡。你会阻止他们吗？玩家可以招募法师、战士和剑客作为你的佣兵。通过Item NFT的装备和升级，他们变得更加强大，并且能够挑战更高级别的undergraves。即刻开始，与僵尸大军作战，获取海量代币奖励！`,
+    歡迎來到地下墓穴！ 一款對抗僵屍的NFT格鬥遊戲。 這些喪屍不斷地尋找著人肉，並已形成軍隊，在不同的地下墓穴中遊蕩。 你會封锁他們嗎？ 玩家可以招募法師、戰士和劍客作為你的傭兵。 通過Item NFT的裝備和陞級，他們變得更加强大，並且能够挑戰更高級別的undergraves。 即刻開始，與僵屍大軍作戰，獲取海量代幣獎勵！`,
     text4: "WHITE PAGE",
     text10: "TAG",
     daos: [
-      { text1: "青铜宝箱 / 数量: 2,000", 
-       text2: `价格：0.1BNB 
-       角色: 60% 法师  30% 战士  10% 剑士
-       级别：50% B 30% A 18% S 2% SS`,
-       text3: "招募" },
       {
-        text1: "白银宝箱 / 数量: 800",
-        text2: ` 价格：0.2BNB 
-        角色: 50% 法师  30% 战士  20% 剑士
-        级别：40% B 40% A 15% S 5% SS`,
+        text1: "青銅寶箱 / 數量：2000",
+        text2: `價格：0.1BNB
+        角色：60%法師30%戰士10%劍士
+        級別：50% B 30% A 18% S 2% SS`,
+        text3: "招募"
+      },
+      {
+        text1: "白銀寶箱 / 數量：800",
+        text2: `價格：0.2BNB
+角色：50%法師30%戰士20%劍士
+級別：40% B 40% A 15% S 5% SS`,
         text3: "招募",
       },
-      { text1: "黄金宝箱 / 数量: 200", text2: `价格：1BNB 
-         角色: 60% 战士  40% 剑士
-         级别：0% B 5% A 75% S 20% SS`, 
-        text3: "招募" },
-        {
-          text1: "酒馆 / 数量: 500",
-          text2: ` 价格: 0.5 BNB
-          级别: 40% C 30% B 15% A 
-          10% S 5% SS `,
-          text3: "购买",
-        },
+      {
+        text1: "黃金寶箱 / 數量：200",
+        text2: `價格：1BNB
+角色：60%戰士40%劍士
+級別：0% B 5% A 75% S 20% SS`,
+        text3: "招募"
+      },
+      {
+        text1: "酒館 / 數量：500",
+        text2: `價格：0.5 BNB
+級別：40% C 30% B 15% A
+10% S 5% SS `,
+        text3: "購買",
+      },
     ],
   },
   expedition: {
-    text1: "探险",
+    text1: "探險",
     text2: "地下墓穴",
     text4: "Introduction",
     text5: "No Date",
@@ -57,15 +62,17 @@ export default {
     text15: "Expert",
     text16: "所需耐力",
     text17: "我的英雄",
+    text18: "請選擇英雄後進行戰鬥",
+    text19: "戰鬥失敗",
   },
   tavern: {
     text1: "Stats",
     text2: "Card",
-    text3: "领取",
+    text3: "領取",
     text4: "Wallet",
     text5: "休息",
-    text40: "Reward",
-    text41: "Referral",
+    text40: "奖励",
+    text41: "邀請",
   },
   recruit: {
     text1: "当前项目",
@@ -92,7 +99,7 @@ export default {
     text22: "合成",
     text23: "授权",
     introduction2: `
-    欢迎来到地下墓穴！一款对抗僵尸的 NFT 格斗游戏。这些丧尸不断地寻找着人肉，并已形成军队，在不同的地下墓穴中游荡。你会阻止他们吗？玩家可以招募法师、战士和剑客作为你的佣兵。通过Item NFT的装备和升级，他们变得更加强大，并且能够挑战更高级别的undergraves。即刻开始，与僵尸大军作战，获取海量代币奖励！
+    歡迎來到地下墓穴！ 一款對抗僵屍的NFT格鬥遊戲。 這些喪屍不斷地尋找著人肉，並已形成軍隊，在不同的地下墓穴中遊蕩。 你會封锁他們嗎？ 玩家可以招募法師、戰士和劍客作為你的傭兵。 通過Item NFT的裝備和陞級，他們變得更加强大，並且能够挑戰更高級別的undergraves。 即刻開始，與僵屍大軍作戰，獲取海量代幣獎勵！
 `,
   },
   market: {
@@ -130,48 +137,48 @@ export default {
   dashboard: {
   },
   walletPopup: {
-    text1: "未连接钱包",
-    text2: "当前没有连接钱包，您是否要连接钱包？",
-    text3: "取 消",
-    text4: "连 接",
-    text5: "连接钱包",
-    text6: "通过连接您的钱包，您同意",
+    text1: "未連接錢包",
+    text2: "當前沒有連接錢包，您是否要連接錢包?",
+    text3: "取消",
+    text4: "連接",
+    text5: "連接錢包",
+    text6: "通過連接您的錢包，您同意",
   },
   class: {
     text1: "All",
-    text2: "Mage",
-    text3: "Fighter",
-    text4: "Swordsmen",
+    text2: "法師",
+    text3: "戰士",
+    text4: "劍客",
     text5: "Other",
     text6: "NFT",
-    text7: "职业",
-    text8: "等级",
-    text9: "经验",
+    text7: "職業",
+    text8: "等級",
+    text9: "經驗",
     text10: "耐力",
-    text11: "选择",
-    text12: "序号",
+    text11: "選擇",
+    text12: "序號",
     text13: "出征",
     text14: "休息",
   },
   status: {
     text1: "已上架",
-    text9: "已关闭",
-    text10: "进行中",
+    text9: "已關閉",
+    text10: "進行中",
     text11: "完成",
   },
   tips: {
-    text1: "敬请期待",
-    text2: "MetaMask被锁定或用户没有连接任何帐户",
-    text3: "连接成功",
-    text4: "连接网络错误，请切换至BSC网络",
-    text6: "请输入数量",
-    text7: "库存不足",
-    text8: "余额不足",
-    text10: "您不在白名单中",
-    text11: "购买成功",
-    text13: "请稍等",
-    text14: "请输入价格",
-    text15: "购买失败",
+    text1: "敬請期待",
+    text2: "MetaMask被鎖定或用戶沒有連接任何帳戶",
+    text3: "連接成功",
+    text4: "連接網絡錯誤，請切換至BSC網絡",
+    text6: "請輸入數量",
+    text7: "庫存不足",
+    text8: "餘額不足",
+    text10: "您不在白名單中",
+    text11: "購買成功",
+    text13: "請稍等",
+    text14: "請輸入價格",
+    text15: "購買失敗",
   },
   btns: {
     text1: "返回",

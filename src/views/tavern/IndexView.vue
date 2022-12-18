@@ -38,7 +38,7 @@
             <!--列表加载自动滚动-->
             <tbody v-loading="loading" @scroll="myHeroListLoad">
               <!--加载点击事件获取选定符合条件的英雄-->
-              <template  v-if="getHeroData.data.length">
+              <template v-if="getHeroData.data.length">
                 <tr v-for="(item, index) in getHeroData.data" :key="index" @click="chooseTokenId(item)">
                   <!--加载单选-->
                   <span>
@@ -47,7 +47,11 @@
                   </span>
                   <th>{{ index + 1 }}</th>
                   <th>{{ item.tokenId }}</th>
-                  <th>{{ heroType(item.type) }}</th>
+                  <th>{{
+                        heroType(item.type) == 1 ? $t("class.text2") 
+                        : (heroType(item.type) == 2 ? $t("class.text3") : $t("class.text4"))
+                    }}
+                    </th>
                   <th>{{ item.lv }}</th>
                   <th>{{ item.exp }}</th>
                   <th>{{ item.stamina }}</th>
@@ -312,10 +316,13 @@ export default {
         tr {
           height: 0.4rem;
           line-height: 0.5rem;
-          padding-right: 0.05rem;
+          padding-right: 0rem;
           background: rgba(24, 24, 28, 0.8);
+          box-shadow: 0px 0px 8px 4px #000000;
           border: 1px solid #3b3b49;
           border-radius: 0.06rem;
+          margin-left: 8px;
+          margin-right: 5px;
 
           td {
             //border-radius: 0.06rem;
@@ -331,6 +338,8 @@ export default {
           height: 0.4rem;
           line-height: 0.5rem;
           font-size: 0.17rem;
+          margin-left: 8px;
+          margin-right: 5px;
 
           img {
             vertical-align: middle;
@@ -340,10 +349,17 @@ export default {
             //margin-top: 0.2rem;
           }
 
+          .el-button {
+            width: 1rem;
+            height: 0.3rem;
+            background: #ac471100;
+          }
+
           &:hover {
             // background: rgba(24, 24, 28, 0.8);
             // border-radius: 0.06rem;
             background: linear-gradient(90deg, #ac4711 0%, #d47221 100%);
+            border-radius: 0.06rem;
             box-shadow: 0px 0px 8px 4px #000000;
           }
         }
@@ -522,6 +538,7 @@ export default {
     }
   }
 }
+
 .no-data {
   height: 4rem;
   line-height: 4rem;

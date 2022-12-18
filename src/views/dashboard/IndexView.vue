@@ -22,7 +22,7 @@
             <div>{{ reward }} BNB</div>
           </div>
           <div class="btn">
-            <el-button :disabled="false"> {{ $t("tavern.text3") }} </el-button>
+            <el-button :disabled="false" @click="claimRewards"> {{ $t("tavern.text3") }} </el-button>
           </div>
         </div>
       </div>
@@ -47,17 +47,22 @@
             <!--列表加载自动滚动-->
             <tbody v-loading="loading" @scroll="myHeroListLoad">
               <!--加载点击事件获取选定符合条件的英雄-->
-              <template  v-if="getHeroData.data.length">
-                <tr v-for="(item, index) in getHeroData.data" :class="{active: tokenId === item.tokenId}" :key="index" @click="chooseTokenId(item)">
+              <template v-if="getHeroData.data.length">
+                <tr v-for="(item, index) in getHeroData.data" :class="{ active: tokenId === item.tokenId }" :key="index"
+                  @click="chooseTokenId(item)">
                   <!--加载单选-->
                   <span>
                     <el-button><img @click.stop="upgradeHero(item.tokenId)" src="@/assets/cdn/images/up.png"
-                      alt /></el-button>
-                  <!-- <input type="radio" :value="item.tokenId" v-model="tokenId"> -->
+                        alt /></el-button>
+                    <!-- <input type="radio" :value="item.tokenId" v-model="tokenId"> -->
                   </span>
                   <th>{{ index + 1 }}</th>
                   <th>{{ item.tokenId }}</th>
-                  <th>{{ heroType(item.type) }}</th>
+                  <th>{{
+                      heroType(item.type) == 1 ? $t("class.text2")
+                      : (heroType(item.type) == 2 ? $t("class.text3") : $t("class.text4"))
+                  }}
+                  </th>
                   <th>{{ item.lv }}</th>
                   <th>{{ item.exp }}</th>
                   <th>{{ item.stamina }}</th>
@@ -133,7 +138,7 @@ export default {
       } else {
         suffix = 'a'
       }
-      
+
       if (window.ethereum) {
         console.log('rewards', tokenId);
         let web3 = new Web3(window.web3.currentProvider);
@@ -305,6 +310,7 @@ export default {
 
     .hero_img {
       width: 100%;
+      height: auto;
       padding: 0.2rem;
       border-bottom: 1px solid;
       margin: 0 auto;
@@ -434,8 +440,11 @@ export default {
           line-height: 0.5rem;
           padding-right: 0.05rem;
           background: rgba(24, 24, 28, 0.8);
-          border: 1px solid #3b3b49;
+          box-shadow: 0px 0px 8px 4px #000000;
+          border: 1px solid #4b4b4b;
           border-radius: 0.06rem;
+           margin-left: 5px;
+          // margin-right: 5px;
 
           td {
             //border-radius: 0.06rem;
@@ -470,6 +479,7 @@ export default {
             // background: rgba(24, 24, 28, 0.8);
             // border-radius: 0.06rem;
             background: linear-gradient(90deg, #ac4711 0%, #d47221 100%);
+            border-radius: 0.06rem;
             box-shadow: 0px 0px 8px 4px #000000;
           }
         }
@@ -645,10 +655,12 @@ export default {
     }
   }
 }
+
 .no-data {
   height: 4rem;
   line-height: 4rem;
 }
+
 .active {
   background: linear-gradient(90deg, #38697f 0%, #5d4c78 100%);
   box-shadow: 0px 0px 8px 4px #000000;

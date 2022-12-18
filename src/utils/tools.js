@@ -1,10 +1,9 @@
 function heroType (type) {
   const hero = {
-    1: '法师',
-    2: '战士',
-    3: '剑客'
+    1: '1',
+    2: '2',
+    3: '3'
   }
-
   return hero[type]
 }
 

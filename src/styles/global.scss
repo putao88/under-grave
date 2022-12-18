@@ -1,11 +1,25 @@
+
+
+@font-face {
+  font-family: "Candal-Regular";
+  src: url('~@/assets/cdn/fonts/Candal-Regular.ttf');
+}
+@font-face {
+  font-family: "Candal-Regular";
+  src: url("~@/assets/cdn/fonts/Candal-Regular.ttf");
+}
 // 中文常规
 .fontfamily_zh {
-  font-family: PingFang !important;
+  font-family: Candal-Regular !important;
 }
 // 英文常规
 .fontfamily_en {
-  font-family: Futura !important;
+  font-family: Candal-Regular !important;
 }
+
+
+
+
 html,
 body {
   font-size: 0;
@@ -13,7 +27,7 @@ body {
   position: relative;
   color: #ffffff;
   background: #16161a;
-  font-family: Futura, PingFang;
+  font-family: Candal-Regular, Candal-Regular;
 }
 a {
   color: #ffffff;
@@ -43,7 +57,7 @@ input {
   outline: none;
   border: 0px;
   caret-color: white;
-  font-family: Futura, PingFang;
+  font-family: Candal-Regular, Candal-Regular;
   &[type="number"] {
     -moz-appearance: textfield;
     &::-webkit-inner-spin-button,
@@ -58,7 +72,7 @@ input {
   }
 }
 button {
-  font-family: Futura, PingFang;
+  font-family: Candal-Regular, Candal-Regular;
 }
 pre {
   white-space: pre-line;

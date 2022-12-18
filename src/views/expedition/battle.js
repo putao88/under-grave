@@ -30,7 +30,6 @@ export const gethero = async () => {
         console.log(herobalance)
         for (let i = 0; i < herobalance; i++) {
             let heroId = await getherobalance.methods.tokenOfOwnerByIndex(fromAddress[0], i).call()
-            console.log(heroId)
             gethero.push(heroId)
         }
     }

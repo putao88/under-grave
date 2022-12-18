@@ -1,69 +1,80 @@
 <template>
   <div class="page">
+
     <div class="box">
-      <!--<div class="row_title">
-        <span>{{ $t("expedition.text1") }}</span>
-      </div>-->
       <ul class="card_list">
+        <div class="center"></div>
         <li @click="expedition('expeditionFirst')">
-          <div class="top"><img src="~@/assets/cdn/images/door1.png" alt="" /></div>
-          <div class="center"><img src="~@/assets/cdn/images/activity_005.png" alt="" /></div>
-          <div class="bottom">
-            <div>{{ $t("expedition.text12") }}</div>
+          <div class="title">
+            <div>{{ $t("expedition.text12") }} </div>
             <div>
               <span>{{ $t("expedition.text2") }} </span>
             </div>
-            <div class="text_ellipsis_row_3">
-              <pre>{{ $t("expedition.text16") }}:50</pre>
-            </div>
           </div>
-          <el-button>{{ $t("expedition.text1") }}
-          </el-button>
+          <div class="top">
+            <div class="attack1"></div>
+            <div class="bottom">
+              <div class="text_ellipsis_row_3">
+                <pre>{{ $t("expedition.text16") }}:50</pre>
+              </div>
+            </div>
+            <el-button>{{ $t("expedition.text1") }}
+            </el-button>
+          </div>
         </li>
         <li @click="expedition('expeditionSecond')">
-          <div class="top"><img src="~@/assets/cdn/images/door2.png" alt="" /></div>
-          <div class="center"><img src="~@/assets/cdn/images/activity_006.png" alt="" /></div>
-          <div class="bottom">
+          <div class="title">
             <div>{{ $t("expedition.text13") }}</div>
             <div>
               <span>{{ $t("expedition.text2") }} </span>
             </div>
-            <div class="text_ellipsis_row_3">
-              <pre>{{ $t("expedition.text16") }}:150</pre>
-            </div>
           </div>
-          <el-button>{{ $t("expedition.text1") }}
-          </el-button>
+          <div class="top">
+            <div class="attack2"></div>
+            <div class="bottom">
+              <div class="text_ellipsis_row_3">
+                <pre>{{ $t("expedition.text16") }}:150</pre>
+              </div>
+            </div>
+            <el-button>{{ $t("expedition.text1") }}
+            </el-button>
+          </div>
         </li>
         <li @click="expedition('expeditionThird')">
-          <div class="top"><img src="~@/assets/cdn/images/door3.png" alt="" /></div>
-          <div class="center"><img src="~@/assets/cdn/images/activity_007.png" alt="" /></div>
-          <div class="bottom">
+          <div class="title">
             <div>{{ $t("expedition.text14") }}</div>
             <div>
               <span>{{ $t("expedition.text2") }} </span>
             </div>
-            <div class="text_ellipsis_row_3">
-              <pre>{{ $t("expedition.text16") }}:500</pre>
-            </div>
           </div>
-          <el-button>{{ $t("expedition.text1") }}
-          </el-button>
+          <div class="top">
+            <div class="attack3"></div>
+            <div class="bottom">
+              <div class="text_ellipsis_row_3">
+                <pre>{{ $t("expedition.text16") }}:500</pre>
+              </div>
+            </div>
+            <el-button>{{ $t("expedition.text1") }}
+            </el-button>
+          </div>
         </li>
         <li @click="expedition('expeditionForth')">
-          <div class="top"><img src="~@/assets/cdn/images/door4.png" alt="" /></div>
-          <div class="center"><img src="~@/assets/cdn/images/activity_008.png" alt="" /></div>
-          <div class="bottom">
+          <div class="title">
             <div>{{ $t("expedition.text15") }}</div>
             <div>
               <span>{{ $t("expedition.text2") }} </span>
             </div>
-            <div class="text_ellipsis_row_3">
-              <pre>{{ $t("expedition.text16") }}:1000</pre>
-            </div>
           </div>
-          <el-button>{{ $t("expedition.text1") }}
-          </el-button>
+          <div class="top">
+            <div class="attack4"></div>
+            <div class="bottom">
+              <div class="text_ellipsis_row_3">
+                <pre>{{ $t("expedition.text16") }}:1000</pre>
+              </div>
+            </div>
+            <el-button>{{ $t("expedition.text1") }}
+            </el-button>
+          </div>
         </li>
       </ul>
       <div class="box3">
@@ -89,7 +100,7 @@
               <!--列表加载自动滚动-->
               <tbody v-loading="loading" @scroll="myHeroListLoad">
                 <!--加载点击事件获取选定符合条件的英雄-->
-                <template  v-if="getHeroData.data.length">
+                <template v-if="getHeroData.data.length">
                   <tr v-for="(item, index) in getHeroData.data" :key="index" @click="chooseTokenId(item)">
                     <!--加载单选-->
                     <span>
@@ -98,7 +109,11 @@
                     </span>
                     <th>{{ index + 1 }}</th>
                     <th>{{ item.tokenId }}</th>
-                    <th>{{ heroType(item.type) }}</th>
+                    <th>{{
+                        heroType(item.type) == 1 ? $t("class.text2") 
+                        : (heroType(item.type) == 2 ? $t("class.text3") : $t("class.text4"))
+                    }}
+                    </th>
                     <th>{{ item.lv }}</th>
                     <th>{{ item.exp }}</th>
                     <th>{{ item.stamina }}</th>
@@ -141,7 +156,7 @@ export default {
       this.loading = false
     }
   },
-  
+
   methods: {
     ...mapActions('underGrave', ['getHeroInfo']),
     heroType(type) {
@@ -154,27 +169,28 @@ export default {
       if (scrollTop >= scrollHeight - clientHeight - 10) {
         console.log("我的英雄，加载下一页");
       }
+
     },
 
     chooseTokenId(item) {
       this.tokenId = item.tokenId;
-      console.log('获取选定的地址进行探险', this.tokenId);
     },
     async expedition(type) {
       if (!this.tokenId) {
-        this.$message.warning('请选择英雄后进行战斗')
+        this.$message.warning({ message: this.$t("expedition.text18") });
         return
       }
       // 英雄战斗接口
       if (window.ethereum) {
-        console.log('探险');
-        console.log(this.tokenId);
         let web3 = new Web3(window.web3.currentProvider);
         const fromAddress = await web3.eth.getAccounts();
         const battlecontract = new web3.eth.Contract(GameAbi, gameAddress)
 
         this.$bus.$emit('global-loading', true)
-        battlecontract.methods[type](this.tokenId).send({ from: fromAddress[0], value: 1 * (10 ** 2) }).then(async (res) => {
+        battlecontract.methods[type](this.tokenId).send({
+          from: fromAddress[0]
+          //, value: 1 * (10 ** 2)
+        }).then(async (res) => {
           console.log(res, '11111111')
           // 获取奖励接口
           const rewards = await battlecontract.methods.rewards(fromAddress[0]).call()
@@ -182,10 +198,10 @@ export default {
           console.log(rewards, '33333333')
         }).catch(err => {
           if (err.code === 4001) {
-            let str = `战斗失败: ${err.message}`
+            let str = `The expedition failed: ${err.message}`
             this.$message.error(str)
           } else {
-            this.$message.error('战斗失败')
+            this.$message.error({ message: this.$t("expedition.text19") })
           }
           console.log(err, '22222222')
           this.$bus.$emit('global-loading', false)
@@ -194,9 +210,6 @@ export default {
     }
   },
 };
-
-
-
 </script>
 
 <style lang="scss" scoped>
@@ -205,7 +218,6 @@ export default {
   padding: 0.8rem 0;
   background: url(~@/assets/cdn/images/landform_1201.png) no-repeat;
   background-size: 100% 100%;
-
   flex-wrap: wrap;
 }
 
@@ -215,36 +227,19 @@ export default {
   margin: 0.2rem auto;
 }
 
-.box_title {
-  margin: 0.5rem 0;
-}
-
-.row_title {
-  text-align: center;
-  font-size: 0.36rem;
-  font-weight: bold;
-  color: #ce6519;
-  margin-bottom: 0.5rem;
-  margin-top: 0.2rem;
-  padding: 5px;
-  background-image: url(~@/assets/cdn/images/battle_038.png);
-  background-size: 70%;
-  background-repeat: no-repeat;
-  background-position: center;
-}
-
 .card_list {
   width: 100%;
-  height: 5.5rem;
+  height: 4.9rem;
   overflow-x: hidden;
   overflow-y: auto;
-  margin: 0.7rem auto;
+  margin: 0.5rem 0 0 0.3rem;
 
   li {
-
     float: left;
-    width: 2.65rem;
-    height: 3.6rem;
+    width: 2.6rem;
+    //width: 3.4rem;
+    // width: 3rem;
+    height: 3.3rem;
     margin: 0 0.3rem 0.3rem 0;
     background: rgba(0, 0, 0, 0);
     border-radius: 0.1rem;
@@ -261,10 +256,6 @@ export default {
     &:hover {
       background: rgba(51, 52, 60, 0.57);
       box-shadow: 0.05rem 0.08rem 0.1rem 0rem rgba(0, 0, 0, 0.5);
-
-      .angle2 {
-        opacity: 1;
-      }
     }
 
     img {
@@ -272,84 +263,160 @@ export default {
       height: 100%;
     }
 
-    .top {
-      width: 100%;
-      height: 100%;
+    .title {
+      padding-top: 10%;
+      text-align: center;
 
-    }
+      &:nth-child(1) {
+        font-size: 0.15rem;
+        font-weight: 600;
+      }
 
-    .center {
-      width: 1.2rem;
-      height: 1.2rem;
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 2.3rem;
-      margin: auto;
-    }
+      &:nth-child(2) {
+        font-size: 0.12rem;
+        font-weight: bold;
 
-    .bottom {
-      width: 100%;
-      height: auto;
-      padding: 0.3rem 0.1rem 0 0.1rem;
-
-      >div {
-        text-align: center;
-
-        &:nth-child(1) {
-          font-size: 0.2rem;
-          font-weight: 600;
-        }
-
-        &:nth-child(2) {
-          font-size: 0.12rem;
-          font-weight: bold;
-
-          span {
-            &:nth-child(2) {
-              color: #00d6ff;
-            }
+        span {
+          &:nth-child(2) {
+            color: #00d6ff;
           }
-        }
-
-        &:nth-child(3) {
-          margin-top: 0.2rem;
-          font-size: 0.12rem;
-          text-align: center;
         }
       }
 
+      &:nth-child(3) {
+        margin-top: 0.2rem;
+        font-size: 0.12rem;
+        text-align: center;
+      }
     }
 
-    .el-button {
-      width: 1.2rem;
-      height: 0.49rem;
-      line-height: 0.2rem;
-      font-size: 0.15rem;
-      background-image: url(~@/assets/cdn/images/055.png);
-      background-repeat: no-repeat;
-      background-position: center;
-      margin: 0.1rem 0 0 0.7rem;
+    .top {
+      width: 100%;
+      height: 100%;
+      margin-top: 0.2rem;
+
+      .attack1 {
+        width: 100%;
+        height: 100%;
+        margin-top: 0.2rem;
+        background: url("~@/assets/cdn/spring/spritesheet1.png")no-repeat;
+        transform: translate(0%, 30px);
+        animation: ghost1 3s steps(7) infinite;
+      }
+
+      .attack2 {
+        width: 100%;
+        height: 100%;
+        margin-top: 0.2rem;
+        background: url("~@/assets/cdn/spring/spritesheet2.png")no-repeat;
+        transform: translate(0%, -60px);
+        animation: ghost2 3s steps(11) infinite;
+      }
+
+      .attack3 {
+        width: 100%;
+        height: 100%;
+        margin-top: 0.2rem;
+        background: url("~@/assets/cdn/spring/spritesheet3.png")no-repeat;
+        transform: translate(0px, 70px);
+        animation: ghost3 3s steps(7) infinite;
+      }
+
+      .attack4 {
+        width: 100%;
+        height: 100%;
+        margin-top: 0.2rem;
+        background: url("~@/assets/cdn/spring/spritesheet4.png")no-repeat;
+        transform: translate(10px, -10px);
+        animation: ghost4 2.5s steps(7) infinite;
+      }
+
+      @keyframes ghost1 {
+        0% {
+          background-position: 0 0;
+        }
+
+        100% {
+          background-position: -1749px 0;
+        }
+      }
+
+      @keyframes ghost2 {
+        0% {
+          background-position: 0 0;
+        }
+
+        100% {
+          background-position: -2640px 0;
+        }
+      }
+
+      @keyframes ghost3 {
+        0% {
+          background-position: 0 0;
+        }
+
+        100% {
+          background-position: -1750px 0;
+        }
+      }
+
+      @keyframes ghost4 {
+        0% {
+          background-position: 0 0;
+        }
+
+        100% {
+          background-position: -1846px 0;
+        }
+      }
+
+      .bottom {
+        width: 100%;
+        height: auto;
+        margin: -0.7rem 0rem 0 0rem;
+
+        >div {
+          text-align: center;
+
+          &:nth-child(1) {
+            font-size: 0.1rem;
+            font-weight: 600;
+          }
+
+          &:nth-child(2) {
+            font-size: 0.12rem;
+            font-weight: bold;
+
+            span {
+              &:nth-child(2) {
+                color: #00d6ff;
+              }
+            }
+          }
+
+          &:nth-child(3) {
+            margin-top: 0.2rem;
+            font-size: 0.12rem;
+            text-align: center;
+          }
+        }
+
+      }
+
+      .el-button {
+        width: 1.2rem;
+        height: 0.49rem;
+        line-height: 0.2rem;
+        font-size: 0.15rem;
+        background-image: url(~@/assets/cdn/images/055.png);
+        background-repeat: no-repeat;
+        background-position: center;
+        margin: 0.1rem 0 0 0.7rem;
+      }
     }
   }
 }
-
-// tbody 滚动
-table tbody {
-  display: block;
-  overflow-x: hidden;
-  overflow-y: auto;
-}
-
-table thead,
-tbody tr,
-tfoot tr,
-thead tr {
-  width: 100%;
-  display: table;
-  table-layout: fixed;
-}
-
 
 .box3 {
   width: 100%;
@@ -390,6 +457,22 @@ thead tr {
 
     }
 
+    // tbody 滚动
+    table tbody {
+      display: block;
+      overflow-x: hidden;
+      overflow-y: scroll;
+    }
+
+    table thead,
+    tbody tr,
+    tfoot tr,
+    thead tr {
+      width: 100%;
+      display: table;
+      table-layout: fixed;
+    }
+
     .content {
       width: 100%;
       padding: 0.1rem 0.3rem;
@@ -400,7 +483,7 @@ thead tr {
       .hero.list {
         margin-bottom: 0.4rem;
         width: 100%;
-        height: auto;
+        height: 3.8rem;
         font-size: 0.18rem;
         font-weight: 400;
         text-align: center;
@@ -413,6 +496,8 @@ thead tr {
             background: rgba(24, 24, 28, 0.8);
             border-radius: 0.06rem;
             border: 1px solid #3b3b49;
+            margin-left: 8px;
+            margin-right: 5px;
 
             td {
               //border-radius: 0.06rem;
@@ -428,6 +513,8 @@ thead tr {
             height: 0.6rem;
             line-height: 0.6rem;
             font-size: 0.17rem;
+            margin-left: 8px;
+            margin-right: 5px;
 
             img {
               vertical-align: middle;
@@ -438,9 +525,8 @@ thead tr {
             }
 
             &:hover {
-              // background: rgba(24, 24, 28, 0.8);
-              // border-radius: 0.06rem;
               background: linear-gradient(90deg, #ac4711 0%, #d47221 100%);
+              border-radius: 0.06rem;
               box-shadow: 0px 0px 8px 4px #000000;
             }
 
@@ -450,18 +536,6 @@ thead tr {
       }
     }
 
-    .row {
-      width: 100%;
-      background: #282834;
-      border-radius: 0.1rem;
-      padding: 0.1rem 0.2rem;
-      margin-bottom: 0.2rem;
-
-      &:nth-child(2),
-      &:nth-child(3) {
-        width: 49.5%;
-      }
-    }
   }
 }
 
@@ -476,14 +550,16 @@ thead tr {
     height: auto;
   }
 
-
   .card_list {
     width: 90%;
     height: 6rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+    margin: 0.2rem 0 0 0.3rem;
 
     li {
       width: 1.62rem;
-      height: 3.1rem;
+      height: 4rem;
       margin: 0 0.1rem 0.1rem 0;
       border-radius: 0.05rem;
 
@@ -492,52 +568,66 @@ thead tr {
       }
 
       .top {
-        width: 100%;
-        height: 1.8rem;
-      }
+        .attack1 {
+          width: 130%;
+          height: 2.5rem;
+          margin: 0 0 0 0;
+          transform: translate(-15%, 0px);
+        }
 
-      .center {
-        width: 0.8rem;
-        height: 0.8rem;
-        top: 1.1rem;
-      }
+        .attack2 {
+          width: 130%;
+          height: 2.5rem;
+          margin: 0 0 0 0;
+          transform: translate(-15%, -40px);
+        }
 
-      .bottom {
-        padding: 0.15rem 0.05rem 0 0.05rem;
+        .attack3 {
+          width: 130%;
+          height: 2.5rem;
+          margin: 0 0 0 0;
+          transform: translate(-20%, 50px);
+        }
 
-        >div {
-          &:nth-child(1) {
-            font-size: 0.12rem;
-            font-weight: bold;
-          }
+        .attack4 {
+          width: 130%;
+          height: 2.5rem;
+          margin: 0 0 0 0;
+          transform: translate(-17%, -0px);
+        }
 
-          &:nth-child(2) {
-            font-size: 0.12rem;
-          }
+        .bottom {
+          padding: 0rem 0.05rem 0 0.05rem;
+          margin: 0rem 0rem 0 0rem;
 
-          &:nth-child(3) {
-            margin-top: 0.1rem;
-            font-size: 0.12rem;
+          >div {
+            &:nth-child(1) {
+              font-size: 0.12rem;
+              font-weight: bold;
+            }
+
+            &:nth-child(2) {
+              font-size: 0.12rem;
+            }
+
+            &:nth-child(3) {
+              margin-top: 0.1rem;
+              font-size: 0.12rem;
+            }
           }
         }
-      }
 
-      .el-button {
-        width: 1.2rem;
-        height: 0.49rem;
-        line-height: 0.2rem;
-        font-size: 0.15rem;
-        background-image: url(~@/assets/cdn/images/055.png);
-        background-repeat: no-repeat;
-        background-position: center;
-        margin: 0.05rem 0 0 0.2rem;
-      }
-
-      .angle2 {
-        width: 0.08rem;
-        height: auto;
-        right: 0.05rem;
-        bottom: 0.05rem;
+        .el-button {
+          width: 1.2rem;
+          height: 0.49rem;
+          line-height: 0.2rem;
+          font-size: 0.15rem;
+          background-image: url("~@/assets/cdn/images/055.png");
+          // background: #00000000;
+          background-repeat: no-repeat;
+          background-position: center;
+          margin: 0.05rem 0 0 0.2rem;
+        }
       }
     }
   }
@@ -574,7 +664,7 @@ thead tr {
       table tbody {
         display: block;
         overflow-x: hidden;
-        overflow-y: auto;
+        overflow-y: scroll;
       }
 
       table thead,
@@ -645,6 +735,7 @@ thead tr {
     }
   }
 }
+
 .no-data {
   height: 3rem;
   line-height: 3rem;

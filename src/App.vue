@@ -13,7 +13,8 @@
       v-show="loading"
       v-loading="loading" 
       element-loading-spinner="el-icon-loading"
-      element-loading-background="rgba(0, 0, 0, 0.6)">
+      element-loading-background="rgba(0, 0, 0, 0.6)"
+      >
     </div>
   </div>
  

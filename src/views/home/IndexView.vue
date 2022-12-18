@@ -18,7 +18,7 @@
           <!-- <div class="radialbg"></div> -->
           <p>
             {{ $t(item.text1) }}
-            <span>{{ $t("status.text9") }}</span>
+            <span>{{ $t("status.text10") }}</span>
           </p>
           <pre>
             <img :src="(`${item.imgs}`)"/>
@@ -39,16 +39,13 @@
       <!-- <div class="row4" style="height:3rem"> -->
       <!-- </div> -->
     </div>
-    <div class="row4" style="height:3rem">
+    <!-- <div class="row4" style="height:3rem">
       <div class="row_title_ido">IDO
       </div>
       <div class="title">
         <br>COMMING SOON
       </div>
-    </div>
-
-
-
+    </div> -->
     <div class="rightbox">
       <div class="box1">
         <div class="title">
@@ -149,14 +146,8 @@ export default {
   },
   methods: {
     async boxsellData() {
-
       if (window.ethereum) {
         var web3 = (web3 = new Web3(window.web3.currentProvider));
-        let fromAddress = await web3.eth.getAccounts();
-        console.log(fromAddress)
-        //console.log(web3.eth.givenProvider)
-
-        //let NFTPresaleAddress = "0x993937656B42B13c5f56596460A465B9F8F7179D"; //INO地址
         let PresaleContract = new web3.eth.Contract(
           NFTPresale,
           NFTPresaleAddress
@@ -209,13 +200,10 @@ export default {
         let currentProvider = window.web3.currentProvider
         let web3 = new Web3(currentProvider);
         let fromAddress = await web3.eth.getAccounts();
-        console.log(fromAddress)
-        //let NFTPresaleAddress = "0x993937656B42B13c5f56596460A465B9F8F7179D"; //INO地址
         let PresaleContract = new web3.eth.Contract(
           NFTPresale,
           NFTPresaleAddress
         );
-        console.log(PresaleContract)
         let countAmount = this.daoList[index].buyAmount;
         let params = {
           from: fromAddress[0],
@@ -311,7 +299,7 @@ export default {
       overflow: hidden;
 
       p {
-        font-size: 0.2rem;
+        font-size: 0.15rem;
         font-weight: bold;
         line-height: 0.3rem;
         display: flex;
@@ -466,10 +454,10 @@ export default {
       align-items: center;
       justify-content: space-between;
       padding: 0 0.2rem;
-      width: 10%;
+      width: 13%;
       height: 0.5rem;
       font-size: 0.2rem;
-      font-weight: 600;
+      font-weight: 400;
       border-radius: 0.1rem;
 
       img {
