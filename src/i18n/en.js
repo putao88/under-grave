@@ -64,6 +64,9 @@ export default {
     text17: "My Hero",
     text18: "Please select your hero",
     text19: "The expedition failed",
+    text20: "Reward:",
+    text21: "Low Stamina Expedite",
+
   },
   tavern: {
     text1: "Stats",

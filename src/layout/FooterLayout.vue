@@ -19,9 +19,9 @@ export default {
   data() {
     return {
       linkList: [
-        { image: require("../assets/cdn/images/contact_Gitbook.webp"), href: "https://undergrave.gitbook.io/undergrave/" },
+        { image: require("../assets/cdn/images/contact_Gitbook.webp"), href: "https://gamefischool.gitbook.io/undergrave_whitebook" },
         { image: require("../assets/cdn/images/contact_Twitter.webp"), href: "https://twitter.com/UnderGraveBSC" },
-        { image: require("../assets/cdn/images/contact_Telegram.webp"), href: "https://t.me/UnderGraveOfficial" },
+        { image: require("../assets/cdn/images/contact_Telegram.webp"), href: "https://t.me/UNDERGRAVE_Official" },
       ],
     };
   },

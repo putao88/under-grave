@@ -12,7 +12,7 @@ export default {
     text9: "更多",
   },
   footer: {
-    text1: "COPYRIGHT © 2022 UnderGrave, All rights Reserved",
+    text1: "COPYRIGHT © 2023 UnderGrave, All rights Reserved",
   },
   home: {
     text1: `UnderGrave`,
@@ -64,6 +64,8 @@ export default {
     text17: "我的英雄",
     text18: "請選擇英雄後進行戰鬥",
     text19: "戰鬥失敗",
+    text20: "获得奖励:",
+    text21: "耐力不足",
   },
   tavern: {
     text1: "Stats",

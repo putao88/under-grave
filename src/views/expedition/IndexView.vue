@@ -1,6 +1,8 @@
 <template>
   <div class="page">
-
+    <transition name="fade">
+      <loading v-if="isLoading"></loading>
+    </transition>
     <div class="box">
       <ul class="card_list">
         <div class="center"></div>
@@ -110,8 +112,8 @@
                     <th>{{ index + 1 }}</th>
                     <th>{{ item.tokenId }}</th>
                     <th>{{
-                        heroType(item.type) == 1 ? $t("class.text2") 
-                        : (heroType(item.type) == 2 ? $t("class.text3") : $t("class.text4"))
+                        heroType(item.type) == 1 ? $t("class.text2")
+                          : (heroType(item.type) == 2 ? $t("class.text3") : $t("class.text4"))
                     }}
                     </th>
                     <th>{{ item.lv }}</th>
@@ -136,14 +138,17 @@ import { mapActions, mapGetters } from 'vuex';
 import { heroType } from '@/utils/tools'
 import GameAbi from "../../abi/Game.json";
 import { gameAddress } from "../../abi/contractdata";
+import Loading from '@/components/attackloading'
+//import { getHeroInfoin } from '@/views/expedition/battle';
 import Web3 from 'web3'
-
 export default {
+  components: { Loading },
   name: "EXPEDITION",
   data() {
     return {
       loading: false,
       tokenId: '',
+      isLoading: false,
     }
   },
   computed: {
@@ -176,26 +181,50 @@ export default {
       this.tokenId = item.tokenId;
     },
     async expedition(type) {
+      let stamina = ''
+      if (type == 'expeditionFirst') {
+        stamina = 50
+      } else if (type == 'expeditionSecond') {
+        stamina = 150
+      } else if (type == 'expeditionThird') {
+        stamina = 500
+      } else if (type == 'expeditionForth') {
+        stamina = 1000
+      }
       if (!this.tokenId) {
         this.$message.warning({ message: this.$t("expedition.text18") });
         return
       }
+      if (this.tokenId) {
+        var web3 = (web3 = new Web3(window.web3.currentProvider));
+        const letHeroInfo = new web3.eth.Contract(GameAbi, gameAddress)
+        let getHeroInfo = await letHeroInfo.methods.getHeroInfo(this.tokenId).call()
+        if (getHeroInfo.heroEndurance < stamina) {
+          this.$message.warning({ message: this.$t("expedition.text21") });
+          return
+        }
+      }
+
       // 英雄战斗接口
       if (window.ethereum) {
         let web3 = new Web3(window.web3.currentProvider);
         const fromAddress = await web3.eth.getAccounts();
         const battlecontract = new web3.eth.Contract(GameAbi, gameAddress)
-
-        this.$bus.$emit('global-loading', true)
+        const rewardsold = await battlecontract.methods.rewards(fromAddress[0]).call()
+        // this.$bus.$emit('global-loading', true)
+        this.isLoading = true
         battlecontract.methods[type](this.tokenId).send({
           from: fromAddress[0]
           //, value: 1 * (10 ** 2)
-        }).then(async (res) => {
+        })
+        .then(async (res) => {
           console.log(res, '11111111')
           // 获取奖励接口
           const rewards = await battlecontract.methods.rewards(fromAddress[0]).call()
-          this.$bus.$emit('global-loading', false)
-          console.log(rewards, '33333333')
+          // this.$bus.$emit('global-loading', false)
+          this.isLoading = false
+          console.log(rewards, '33333333');
+          this.$message.warning({ message: this.$t("expedition.text20") + (rewards - rewardsold) / 1e18 + "BNB" });
         }).catch(err => {
           if (err.code === 4001) {
             let str = `The expedition failed: ${err.message}`
@@ -204,7 +233,8 @@ export default {
             this.$message.error({ message: this.$t("expedition.text19") })
           }
           console.log(err, '22222222')
-          this.$bus.$emit('global-loading', false)
+          //this.$bus.$emit('global-loading', false)
+          this.isLoading = false
         })
       }
     }

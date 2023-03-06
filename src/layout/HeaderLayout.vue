@@ -101,32 +101,32 @@ export default {
 
     async changeNetwork() {
       if (this.validated()) {
-        this.switchNetwork();
+      //  this.switchNetwork();
         await window.ethereum.request({
           method: "eth_requestAccounts",
         });
       }
     },
-    async switchNetwork() {
-      await window.ethereum.request({
-        method: "wallet_addEthereumChain",
-        params: [
-          {
-            chainId: '0x61',
-            chainName: 'Binance Smart Chain Testnet',
-            nativeCurrency: {
-              name: 'Binance Coin',
-              symbol: 'BNB',
-              decimals: 18,
-            },
-            rpcUrls: [
-              'https://data-seed-prebsc-1-s3.binance.org:8545',
-            ],
-            blockExplorerUrls: ['https://testnet.bscscan.com'],
-          },
-        ],
-      });
-    },
+    // async switchNetwork() {
+    //   await window.ethereum.request({
+    //     method: "wallet_addEthereumChain",
+    //     params: [
+    //       {
+    //         chainId: '0x61',
+    //         chainName: 'Binance Smart Chain Testnet',
+    //         nativeCurrency: {
+    //           name: 'Binance Coin',
+    //           symbol: 'BNB',
+    //           decimals: 18,
+    //         },
+    //         rpcUrls: [
+    //           'https://data-seed-prebsc-1-s3.binance.org:8545',
+    //         ],
+    //         blockExplorerUrls: ['https://testnet.bscscan.com'],
+    //       },
+    //     ],
+    //   });
+    // },
     validated() {
       if (typeof window.ethereum !== "undefined") {
         return true;
