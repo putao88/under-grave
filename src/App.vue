@@ -1,6 +1,5 @@
 <template>
-  <div id="container" :class="isEnLang ? 'fontfamily_en' : 'fontfamily_zh'"
-  @scroll="handleScrollScroll($event)">
+  <div id="container" :class="isEnLang ? 'fontfamily_en' : 'fontfamily_zh'" @scroll="handleScrollScroll($event)">
     <HeaderLayout />
     <div id="container_body">
       <router-view />
@@ -8,16 +7,11 @@
     </div>
     <el-backtop></el-backtop>
     <WalletConnect />
-    <div 
-      class="global-loading" 
-      v-show="loading"
-      v-loading="loading" 
-      element-loading-spinner="el-icon-loading"
-      element-loading-background="rgba(0, 0, 0, 0.6)"
-      >
+    <div class="global-loading" v-show="loading" v-loading="loading" element-loading-spinner="el-icon-loading"
+      element-loading-background="rgba(0, 0, 0, 0.6)">
     </div>
   </div>
- 
+
 </template>
 <script>
 import { mapGetters } from "vuex";
@@ -66,7 +60,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @media screen and (max-width: 750px) {
   #container {
     #container_body {
@@ -74,11 +68,13 @@ export default {
     }
   }
 }
+
 .global-loading {
   position: fixed !important;
   top: 0;
   width: 100%;
   height: 100vh;
-  z-index: 9999999;
+  z-index: 9999;
 }
+
 </style>
