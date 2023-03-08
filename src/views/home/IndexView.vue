@@ -306,6 +306,7 @@ export default {
             this.$message.error(`购买失败: ${err.message}`)
           }
         }).finally(() => {
+          this.preSaleMount()
           this.$bus.$emit('global-loading', false)
         })
       }
