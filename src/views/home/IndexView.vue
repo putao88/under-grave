@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <!-- INO -->
-    <div class="row4">
+    <div class="row4" v-if="perSale">
       <div class="row_title">INO
       </div>
       <div class="title">
@@ -39,6 +39,35 @@
       <!-- <div class="row4" style="height:3rem"> -->
       <!-- </div> -->
     </div>
+    <div class="pre-sale-container" v-else>
+      <div>
+        <p class="pre-title">xxxxxxxx</p>
+        <div class="sale-progress">
+          <el-progress :text-inside="true" :stroke-width="30" :percentage="precent" color="#d47221" status="warning"></el-progress>
+          <span>{{havBnb}}BNB / {{maxBnb}}BNB</span>
+        </div>
+      </div>
+      <div class="sale-input">
+        <p class="pre-title">Presale</p>
+        <el-input type="number" v-model="bnbValue">
+          <template slot="prepend">Spend</template>
+          <template slot="append">BNB</template>
+        </el-input>
+        <el-input type="number" :disabled="true" v-model="ugtValue">
+          <template slot="prepend">Get</template>
+          <template slot="append">UGT</template>
+        </el-input>
+        <el-button type="warning" plain :disabled="!bnbValue" @click="buyUgt">BUY</el-button>
+      </div>
+      <div class="sale-share">
+        <p class="pre-title">Share token</p>
+        <div class="pre-token">
+          <p>{{getAccount}}</p>
+          <el-button class="cli-txt" type="warning" plain @click="shareUrl">Copy</el-button>
+        </div>
+        <p class="pre-sale">Every time new friends join the presale, you can earn up to <span>10% ETH Reward</span></p>
+      </div>
+    </div>
     <!-- <div class="row4" style="height:3rem">
       <div class="row_title_ido">IDO
       </div>
@@ -64,7 +93,9 @@
 <script>
 import { mapGetters } from "vuex";
 import NFTPresale from "../../abi/NFTPresale.json";
-import { NFTPresaleAddress } from "../../abi/contractdata";
+import PreSaleNFT from "../../abi/PreSaleNFT.json";
+import { NFTPresaleAddress, SaleNFTAddress } from "../../abi/contractdata";
+import ClipboardJS from 'clipboard';
 import Web3 from 'web3'
 
 const price = {
@@ -78,11 +109,22 @@ export default {
   name: "HOME",
 
   computed: {
-    ...mapGetters(["isEnLang"])
+    ...mapGetters(["getAccount", "isEnLang"]),
+    ugtValue() {
+      return this.bnbValue * 10000
+    },
+    precent() {
+      let val = this.havBnb / this.maxBnb
+      return val < 1 ? (val * 100) : 100
+    }
   },
   data() {
     return {
       customColor: '#f56c6c',
+      perSale: false,
+      bnbValue: 0,
+      maxBnb: 300,
+      havBnb: 0,
       daoList: [
         {
           text1: "home.daos[0].text1",
@@ -137,14 +179,26 @@ export default {
   },
   mounted() {
     if (window.ethereum) {
-      this.boxsellData();
-      setInterval(() => {
-        setTimeout(this.boxsellData, 0)
-      }, 10000);
+      if (this.perSale) {
+          this.boxsellData();
+          setInterval(() => {
+            setTimeout(this.boxsellData, 0)
+          }, 10000);
+      } else {
+        this.preSaleMount()
+      }
     }
-
   },
   methods: {
+    async preSaleMount() {
+        if (window.ethereum) {
+          var web3 = new Web3(window.web3.currentProvider);
+          web3.eth.getBalance(SaleNFTAddress).then(res => {
+            let num = res || 0
+            this.havBnb = num / 10 ** 18
+          })
+        }
+    },
     async boxsellData() {
       if (window.ethereum) {
         var web3 = (web3 = new Web3(window.web3.currentProvider));
@@ -207,7 +261,7 @@ export default {
         let countAmount = this.daoList[index].buyAmount;
         let params = {
           from: fromAddress[0],
-          value: countAmount * p * (10 ** 17)
+          value: countAmount * p * (10 ** 18)
         }
         this.$bus.$emit('global-loading', true)
         PresaleContract.methods[type](countAmount)
@@ -222,6 +276,54 @@ export default {
             this.$bus.$emit('global-loading', false)
           })
       }
+    },
+
+    async buyUgt() {
+      if (!this.bnbValue) {
+        return
+      }
+      if (window.ethereum) {
+        let currentProvider = window.web3.currentProvider
+        let web3 = new Web3(currentProvider);
+        let shareToken = this.$route.params?.shareToken
+        let fromAddress = await web3.eth.getAccounts();
+        let inviteAddress = shareToken || fromAddress[0]
+        let SaleContract = new web3.eth.Contract(
+          PreSaleNFT,
+          SaleNFTAddress
+        );
+
+        let params = {
+          from: fromAddress[0],
+          value: this.bnbValue * (10 ** 18)
+        }
+        this.$bus.$emit('global-loading', true)
+        SaleContract.methods.buyToken(this.ugtValue, inviteAddress).send(params).then(() => {
+          // TODO?
+          this.$message.success('购买成功')
+        }).catch(err => {
+          if (err.code === 4001) {
+            this.$message.error(`购买失败: ${err.message}`)
+          }
+        }).finally(() => {
+          this.$bus.$emit('global-loading', false)
+        })
+      }
+    },
+
+    shareUrl() {
+      let url = `${window.location.origin}/#/home/${this.getAccount}`
+      let clipboard = new ClipboardJS('.cli-txt', {
+        text: () => {
+          return url
+        }
+      })
+      clipboard.on('success', () => {
+        this.$message.success('复制成功')
+      })
+      clipboard.on('error', () => {
+        this.$message.success('复制失败')
+      })
     },
 
     beforeDestroy() {
@@ -242,8 +344,102 @@ export default {
   background: url(~@/assets/cdn/images/landform_0301.png) no-repeat;
   background-size: 100% 100%;
   padding: 1rem 0;
+  .pre-sale-container {
+    width: 400px;
+    padding: 20px;
+    margin: 0 auto;
+    > div {
+      margin: 40px 0px;
+    }
+    .pre-title {
+      font-size: 18px;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .sale-input {
+      .el-input {
+        margin-bottom: 20px;
+        ::v-deep {
+          .el-input__inner, .el-input-group__prepend, .el-input-group__append {
+            background: rgba(129, 129, 151, 0.19);
+            border: 1px solid #d47221;
+            -webkit-backdrop-filter: blur(0.07rem);
+            backdrop-filter: blur(0.07rem);
+            color: white;
+          }
+          .el-input__inner {
+            border-left: none;
+            border-right: none;
+          }
+          .el-input-group__prepend {
+            width: 92px;
+            text-align: center;
+            border-radius: 0.08rem 0 0 0.08rem;
+          }
+          .el-input-group__append {
+            width: 74px;
+            text-align: center;
+            border-radius: 0 0.08rem 0.08rem 0;
+          }
+        }
+      }
+      .el-button {
+        height: 40px;
+        width: 100%;
+      }
+    }
+    .sale-progress {
+      position: relative;
+      > span {
+        position: absolute;
+        top: 0;
+        left: 38%;
+        line-height: 30px;
+        font-size: 12px;
+      }
+      .el-progress {
+        ::v-deep {
+          .el-progress-bar__innerText {
+            opacity: 0;
+          }
+        }
+      }
+    }
+    .sale-share {
+      font-size: 12px;
+      .el-button {
+        height: 40px;
+        width: 60px;
+      }
+      .pre-sale {
+        span {
+          color: #d47221;
+        }
+      }
+      .pre-token {
+        display: flex;
+        p {
+          display: inline-block;
+          width: calc(100% - 80px);
+          margin-right: 20px;
+          font-size: 14px;
+          line-height: 40px;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          overflow: hidden;
 
+          background: rgba(129, 129, 151, 0.19);
+          -webkit-backdrop-filter: blur(0.07rem);
+          backdrop-filter: blur(0.07rem);
+          border-radius: 0.08rem;
+          padding: 0px 4px;
+          color: white;
+        }
+      }
+    }
+  }
 }
+
 
 .row_title {
   text-align: center;

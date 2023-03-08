@@ -15,6 +15,11 @@ const routes = [
     component: () => import("../views/home/IndexView.vue"),
   },
   {
+    path: "/home/:shareToken",
+    name: "HOME",
+    component: () => import("../views/home/IndexView.vue"),
+  },
+  {
     path: "/recruit",
     name: "RECRUIT",
     component: () => import("../views/recruit/IndexView.vue"),
